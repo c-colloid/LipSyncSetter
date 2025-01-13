@@ -151,7 +151,6 @@ jobs:
       - name: Commit & tag version
         if: ${{ inputs.publish }}
         run: |
-          git commit -am "chore: bump version to $VERSION"
           git tag "v$VERSION"
 
       # region building
