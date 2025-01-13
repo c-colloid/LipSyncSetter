@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:VisualElement name="Viseme_Name" class="unity-base-field unity-popup-field unity-enum-field myfield" style="height: 16px; display: none;">
+        <ui:Label text="Name" class="unity-base-field__label unity-popup-field__label unity-enum-field__label" style="-unity-text-align: middle-left; width: 50%; min-width: 50%;" />
+        <ui:VisualElement class="unity-base-field__input unity-enum-field__input unity-popup-field__input">
+            <ui:TextElement text="-none-" class="unity-text-element mytext unity-popup-field__text unity-enum-field__text" />
+            <ui:VisualElement class="unity-popup-field__arrow unity-enum-field__arrow" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:DropdownField label="Dropdown" />
+</ui:UXML>

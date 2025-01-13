@@ -1,0 +1,35 @@
+#AvatarField .unity-object-field__label {
+    font-size: 15px;
+    -unity-font-style: bold;
+}
+
+#AvatarField:hover .unity-object-field__label {
+    font-size: 15px;
+    -unity-font-style: bold;
+    color: rgb(255, 68, 77);
+}
+
+.unity-base-field__input {
+    -unity-font-style: normal;
+    max-width: 150px;
+    -unity-text-align: upper-left;
+}
+
+.unity-base-field {
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.unity-base-field__label {
+    min-width: 60px;
+}
+
+#LipSyncList .unity-base-field__label:hover {
+    min-width: 60px;
+    -unity-font-style: bold;
+}
+
+#LipSyncList .unity-base-field__label {
+    min-width: 50%;
+    width: 50%;
+}

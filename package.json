@@ -1,0 +1,14 @@
+{
+  "name": "jp.colloid.lipsyncsetter",
+  "version": "1.4.0",
+  "displayName": "LipSyncSetter",
+  "description": "Generate animation-based LipSync.",
+  "unity": "2019.3",
+  "documentationUrl": "",
+  "changelogUrl": "",
+  "licensesUrl": "",
+  "license": "MIT",
+  "keywords": ["LipSync"],
+  "url" : "",
+  "repo" : ""
+}

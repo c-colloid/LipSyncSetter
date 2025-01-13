@@ -1,0 +1,27 @@
+{
+    "name": "LSSNDMF",
+    "rootNamespace": "",
+    "references": [
+        "GUID:62ced99b048af7f4d8dfe4bed8373d76",
+        "GUID:01f2baba021cc2546860143c0bbbc710"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "NDMF"
+    ],
+    "versionDefines": [
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "",
+            "define": "NDMF"
+        }
+    ],
+    "noEngineReferences": false
+}

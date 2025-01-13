@@ -1,0 +1,19 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:Template name="LSSBlendShapePanel" src="project://database/Assets/LipSyncSetter/Editor/UXML/LSSBlendShapePanel.uxml?fileID=9197481963319205126&amp;guid=dcd28839538137a4aa464b60079bc091&amp;type=3#LSSBlendShapePanel" />
+    <Style src="project://database/Assets/LipSyncSetter/Editor/USS/LipSyncSetter.uss?fileID=7433441132597879392&amp;guid=f78478e0b8f5bb948a549f1890310724&amp;type=3#LipSyncSetter" />
+    <uie:ObjectField label="Avatar" name="AvatarField" type="VRC.SDK3.Avatars.Components.VRCAvatarDescriptor, VRCSDK3A" tooltip="対象アバター" />
+    <uie:PropertyField style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
+    <ui:Instance template="LSSBlendShapePanel" name="LSSBlendShapePanel" style="flex-grow: 1;" />
+    <ui:ListView focusable="true" name="LipSyncList" style="height: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: none;" />
+    <ui:Label text="LipSync" name="Title" style="display: none;" />
+    <uie:ObjectField label="Face Mesh" name="FaceMesh" style="display: none;" />
+    <ui:VisualElement style="flex-direction: row; justify-content: space-between; flex-wrap: wrap; flex-shrink: 0;">
+        <uie:ObjectField label="FX Layer" name="FXLayer" type="UnityEditor.Animations.AnimatorController, UnityEditor.CoreModule" tooltip="現在のアニメーターコントローラー" style="max-height: 22px; max-width: 100%; width: 250px;" />
+        <ui:Button name="FXLayerSetting" binding-path="m_fxlayersetting" tooltip="新規アニメーターの作成" class="FXLayerSetting" style="background-image: url(&quot;project://database/Assets/LipSyncSetter/Resource/Folder_DarkGrey(Unity).png?fileID=2800000&amp;guid=34dc5b66b260e9448922ff542fc006bd&amp;type=3#Folder_DarkGrey(Unity)&quot;); -unity-background-scale-mode: scale-to-fit; width: 20%; max-width: 40px; max-height: 20px;" />
+        <uie:ObjectField label="New FX Layer" name="NewFXLayer" type="UnityEditor.Animations.AnimatorController, UnityEditor.CoreModule" allow-scene-objects="false" tooltip="新アニメーターコントローラー" class="NewFXLayer" style="display: flex;" />
+    </ui:VisualElement>
+    <ui:VisualElement style="flex-shrink: 0; flex-direction: row; height: 30px;">
+        <ui:Button name="Reload" tooltip="リセット" style="background-image: url(&quot;project://database/Assets/LipSyncSetter/Resource/Reload%20Icon.png?fileID=2800000&amp;guid=2d942cfbc4e19f248b77e80abe557f8b&amp;type=3#Reload Icon&quot;); position: absolute; left: 1px; top: 1px; bottom: 1px; right: 100px; width: 25px; -unity-background-scale-mode: scale-to-fit;" />
+        <ui:Button text="Create" name="Create" tooltip="リップシンクの作成" style="position: absolute; top: 1px; left: 30px; right: 1px; bottom: 1px;" />
+    </ui:VisualElement>
+</ui:UXML>

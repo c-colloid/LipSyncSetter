@@ -1,0 +1,7 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <ui:Template name="BlendShapeElement" src="project://database/Assets/LipSyncSetter/Editor/UXML/BlendShapeElement.uxml?fileID=9197481963319205126&amp;guid=b5c3c1a878389b0439524437b914a707&amp;type=3#BlendShapeElement" />
+    <Style src="project://database/Assets/LipSyncSetter/Editor/USS/BlendShapeSelector.uss?fileID=7433441132597879392&amp;guid=b1a98c93045e42b4c9de89977870a6fa&amp;type=3#BlendShapeSelector" />
+    <ui:ScrollView>
+        <ui:Instance template="BlendShapeElement" name="BlendShapeElement" />
+    </ui:ScrollView>
+</ui:UXML>
