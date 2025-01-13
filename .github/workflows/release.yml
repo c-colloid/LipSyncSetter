@@ -169,36 +169,7 @@ jobs:
           name: vpm-package
           path: build/${{ env.PKG_NAME }}-${{ env.VERSION }}.zip
       # endregion vpm release
-
-      # region docs
-      # remember update update-website.yml
-      - name: Update .docs/config.toml
-        run: sed -i'.bak' -e "s/(SNAPSHOT)/($VERSION)/" .docs/config.toml && rm .docs/config.toml.bak
-
-      - name: Build docs as a beta docs
-        working-directory: .docs
-        run: ./build.sh 'https://vpm.anatawa12.com/avatar-optimizer/beta' "$VERSION"
-
-      - name: Copy to beta dir if it's release
-        if: ${{ !fromJSON(env.PRERELEASE) }}
-        working-directory: .docs
-        run: mkdir -p static && mv public static/beta
-      - name: Build docs as a release docs if it's release
-        if: ${{ !fromJSON(env.PRERELEASE) }}
-        working-directory: .docs
-        run: ./build.sh 'https://vpm.anatawa12.com/avatar-optimizer' "$VERSION"
-
-      - name: zip docs
-        run: cd .docs/public && zip ../../build/website.zip -r .
-      - name: Upload docs
-        uses: actions/upload-artifact@v3
-        with:
-          name: website
-          path: .docs/public
-
-      - name: Restore .docs/config.toml
-        run: git restore --staged --worktree .docs/config.toml
-      # endregion docs
+      
       # endregion building
 
       - name: Publish Release
