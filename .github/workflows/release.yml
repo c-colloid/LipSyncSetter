@@ -189,7 +189,6 @@ jobs:
             -F "$RELEASE_NOTE" \
             ${{ fromJSON(env.PRERELEASE) && '--prerelease' || '' }} \
             "build/$PKG_NAME-$VERSION.zip" \
-            build/website.zip \
             "package.json" \
 
       - name: Restore package.json
