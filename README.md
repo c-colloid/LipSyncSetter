@@ -1,4 +1,8 @@
 # LipSyncSetter
+[![GitHub release][shields-latest-release]][github-latest]
+
+[shields-latest-release]: https://img.shields.io/github/v/release/c-colloid/LipSyncSetter?display_name=tag&sort=semver
+[github-latest]: https://github.com/c-colloid/LipSyncSetter/releases/latest
 Version 1.4.1
 
 # 概要
