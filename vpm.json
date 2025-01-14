@@ -1,4 +1,5 @@
-{"id":"jp.colloid.lipsyncsetter",
+{"name":"LipSyncSetter",
+  "id":"jp.colloid.lipsyncsetter",
   "url":"https://c-colloid.github.io/LipSyncSetter/vpm.json",
   "packages":{"jp.colloid.lipsyncsetter":
     {"versions":
@@ -14,4 +15,4 @@
           "license":"MIT",
           "keywords":["LipSync"],
           "url":"https://github.com/c-colloid/LipSyncSetter/releases/download/v1.4.1/LipSyncSetter-1.4.1.zip",
-          "repo":""}}}}}
+          "repo":"https://c-colloid.github.io/LipSyncSetter/vpm.json"}}}}}
