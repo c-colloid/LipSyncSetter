@@ -18,7 +18,7 @@ on:
         required: false
 
 env:
-  PKG_NAME: jp.colloid.lipsyncsetter
+  PKG_NAME: LipSyncSetter
   SOMETHING_RELEASER_SEMVER: 1
 
 concurrency:
