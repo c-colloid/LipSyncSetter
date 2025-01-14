@@ -131,5 +131,5 @@ jobs:
           git config user.name  "GitHub Action"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add ./vpm.json
-          git commit -m "Add TTT New Version ${{ github.event.inputs.tag }}!!"
+          git commit -m "Add LSS New Version ${{ github.event.inputs.tag }}!!"
           git push origin
