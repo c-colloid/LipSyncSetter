@@ -161,14 +161,12 @@ jobs:
       - name: Set Environment Variables
         run: |
           echo "unityPackage=build/$PKG_NAME-v$VERSION.unitypackage" >> $GITHUB_ENV
-      
-      - run: find -name \*.meta >> metaList
-          
+
       - name: Create UnityPackage
-        uses: pCYSl5EDgo/create-unitypackage@cfcd3cf0391a5ef1306342794866a9897c32af0b
+        uses: anatawa12/sh-actions/create-unitypackage@master
         with:
-          package-path: ${{ env.unityPackage }}
-          include-files: metaList
+          output-path: ${{ env.unityPackage }}
+          path-prefix: "Packages/jp.colloid.lipsyncsetter/"
       #endregion unitypackage release
 
       # region vpm release
