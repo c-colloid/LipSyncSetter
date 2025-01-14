@@ -156,7 +156,20 @@ jobs:
       # region building
       - name: Prepare build folder
         run: mkdir build
+
+      # refion unitypackage release
+      - name: Set Environment Variables
+        run: |
+          echo "unityPackage=build/$PKG_NAME-v$VERSION.unitypackage" >> $GITHUB_ENV
+      
+      - run: find -name \*.meta >> metaList
           
+      - name: Create UnityPackage
+        uses: pCYSl5EDgo/create-unitypackage@cfcd3cf0391a5ef1306342794866a9897c32af0b
+        with:
+          package-path: ${{ env.unityPackage }}
+          include-files: metaList
+      #endregion unitypackage release
 
       # region vpm release
       - name: Build VPM release
@@ -188,6 +201,7 @@ jobs:
           gh release create "v$VERSION" \
             -F "$RELEASE_NOTE" \
             ${{ fromJSON(env.PRERELEASE) && '--prerelease' || '' }} \
+            "build/$PKG_NAME-$VERSION.unitypackage" \
             "build/$PKG_NAME-$VERSION.zip" \
             "package.json" \
 
