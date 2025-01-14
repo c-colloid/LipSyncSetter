@@ -201,7 +201,7 @@ jobs:
           gh release create "v$VERSION" \
             -F "$RELEASE_NOTE" \
             ${{ fromJSON(env.PRERELEASE) && '--prerelease' || '' }} \
-            "build/$PKG_NAME-$VERSION.unitypackage" \
+            "build/$PKG_NAME-v$VERSION.unitypackage" \
             "build/$PKG_NAME-$VERSION.zip" \
             "package.json" \
 
