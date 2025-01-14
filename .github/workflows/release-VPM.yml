@@ -118,7 +118,7 @@ jobs:
               jsonObj = addJsonObj;
             }
 
-            return JSON.stringify(jsonObj , null , 2);
+            return JSON.stringify(jsonObj , null , "\r");
 
       - name: Write Json
         run: |
