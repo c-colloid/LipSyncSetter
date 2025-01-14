@@ -106,8 +106,8 @@ jobs:
           script: |
             const { InputStr , AddVersion } = process.env
 
-            let jsonObj = JSON.parse(InputStr);
-            let addJsonObj = JSON.parse(AddVersion);
+            let jsonObj = JSON.parse(InputStr || "null");
+            let addJsonObj = JSON.parse(AddVersion || "null");
 
             jsonObj.packages[addJsonObj.name].versions[addJsonObj.version] = addJsonObj;
 
