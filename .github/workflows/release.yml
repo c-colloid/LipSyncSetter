@@ -174,7 +174,7 @@ jobs:
       - name: Publish Release
         if: ${{ inputs.publish }}
         run: |
-          git push && git push origin "v$VERSION"
+          git push && git push origin "v$VERSION" -f
 
       - name: Publish release to github
         if: ${{ inputs.publish }}
