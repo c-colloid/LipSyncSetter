@@ -30,7 +30,7 @@ jobs:
 
             for (const asset of JSON.parse(InputStr))
             {
-              if (asset.name.startsWith("LipSyncSetter-"))
+              if (asset.name.startsWith("LipSyncSetter-") && asset.name.endsWith(".zip"))
               {
                 return asset.browser_download_url;
               }
@@ -118,7 +118,7 @@ jobs:
               jsonObj = addJsonObj;
             }
 
-            return JSON.stringify(jsonObj , null , 2);
+            return JSON.stringify(jsonObj);
 
       - name: Write Json
         run: |
