@@ -109,7 +109,14 @@ jobs:
             let jsonObj = JSON.parse(InputStr || "null");
             let addJsonObj = JSON.parse(AddVersion || "null");
 
-            jsonObj.packages[addJsonObj.name].versions[addJsonObj.version] = addJsonObj;
+            if (jsonObj)
+            {
+              jsonObj.packages[addJsonObj.name].versions[addJsonObj.version] = addJsonObj;
+            }
+            else
+            {
+              jsonObj = addJsonObj;
+            }
 
             return JSON.stringify(jsonObj);
 
