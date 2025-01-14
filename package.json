@@ -9,6 +9,11 @@
   "licensesUrl": "",
   "license": "MIT",
   "keywords": ["LipSync"],
+  "author": {
+    "name": "ｺﾛｲﾄﾞ",
+    "email": "",
+    "url": ""
+  },
   "url" : "",
   "repo" : ""
 }
