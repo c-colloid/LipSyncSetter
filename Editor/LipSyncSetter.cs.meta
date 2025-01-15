@@ -6,8 +6,8 @@ MonoImporter:
   defaultReferences:
   - m_ViewDataDictionary: {instanceID: 0}
   - UXML: {fileID: 9197481963319205126, guid: f2f22abe2a1b07740ae52427ca8deeb1, type: 3}
-  - folder: {fileID: 102900000, guid: 379304e029d8cade50802dd4f246456a, type: 3}
   - _animator: {fileID: 9100000, guid: c349e20dc611ea543b1c93cc8db32def, type: 2}
+  - folder: {fileID: 102900000, guid: e314b35e356f6cf49a0334514abbfbfb, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
