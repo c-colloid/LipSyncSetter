@@ -1,22 +1,33 @@
-{"name":"LipSyncSetter",
+{
+  "name": "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}",
   "author": "ｺﾛｲﾄﾞ",
-  "id":"jp.colloid.lipsyncsetter",
-  "url":"https://c-colloid.github.io/LipSyncSetter/vpm.json",
-  "packages":
-  {"jp.colloid.lipsyncsetter":
-    {"versions":
-      {"1.4.1":
-        {"name":"jp.colloid.lipsyncsetter",
-          "version":"1.4.1",
-          "displayName":"LipSyncSetter",
-          "description":"Generate animation-based LipSync.",
-          "unity":"2019.3",
-          "documentationUrl":"",
-          "changelogUrl":"https://c-colloid.github.io/LipSyncSetter/CHANGELOG.md",
-          "licensesUrl":"https://c-colloid.github.io/LipSyncSetter/LICENSE.txt",
-          "license":"MIT",
-          "keywords":["LipSync"],
-          "author":{"name":"ｺﾛｲﾄﾞ"
+  "id": "jp.colloid.lipsyncsetter",
+  "url": "https://c-colloid.github.io/LipSyncSetter/vpm.json",
+  "packages": {
+    "jp.colloid.lipsyncsetter": {
+      "versions": {
+        "1.4.1": {
+          "name": "jp.colloid.lipsyncsetter",
+          "version": "1.4.1",
+          "displayName": "LipSyncSetter",
+          "description": "Generate animation-based LipSync.",
+          "unity": "2019.3",
+          "documentationUrl": "",
+          "changelogUrl": "",
+          "licensesUrl": "",
+          "license": "MIT",
+          "keywords": [
+            "LipSync"
+          ],
+          "author": {
+            "name": "ｺﾛｲﾄﾞ",
+            "email": "",
+            "url": ""
           },
-          "url":"https://github.com/c-colloid/LipSyncSetter/releases/download/v1.4.1/LipSyncSetter-v1.4.1.zip",
-          "repo":"https://c-colloid.github.io/LipSyncSetter/vpm.json"}}}}}
+          "url": "https://github.com/c-colloid/LipSyncSetter/releases/download/v1.4.1/LipSyncSetter-v1.4.1.zip",
+          "repo": "https://c-colloid.github.io/LipSyncSetter/vpm.json"
+        }
+      }
+    }
+  }
+}
