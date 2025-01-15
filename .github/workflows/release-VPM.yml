@@ -5,6 +5,11 @@ on:
       tag:
         type: string
         required: true
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
 
 jobs:
   add-lss-new-version:
