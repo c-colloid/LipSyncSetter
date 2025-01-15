@@ -51,15 +51,7 @@ namespace LipSyncSetter.Editor
 				ve.Q<PopupField<string>>().bindingPath = $"_lipSyncs.Array.data[{i}].value";
 				
 				visemeList.Bind(serializedObject);
-				
-				//var blendshapeindex = 0;
-				//if (AvatarDescriptor != null)
-				//	blendshapeindex = LipSyncBlendShape.IndexOf(i < 15 ? AvatarDescriptor.VisemeBlendShapes[i] : "disable");
-				//ve.Q<PopupField<string>>().index = blendshapeindex != -1 ? blendshapeindex : 0;
 			};
-				
-			//lss.Root.DefaultAnimator = lss.LSSAvatarData.AvatarDescriptor.baseAnimationLayers[Array.IndexOf(lss.LSSAvatarData.AvatarDescriptor.baseAnimationLayers,lss.LSSAvatarData.AvatarDescriptor.baseAnimationLayers.Single(l => l.type == VRCAvatarDescriptor.AnimLayerType.FX))].animatorController as AnimatorController;
-			
 			
 			var fold = new Foldout(){text = "dafalt",value = false ,style = {display = DisplayStyle.None}};
 			InspectorElement.FillDefaultInspector(fold,serializedObject,this);
