@@ -61,7 +61,7 @@ namespace LipSyncSetter.Editor
 			//lss.Root.DefaultAnimator = lss.LSSAvatarData.AvatarDescriptor.baseAnimationLayers[Array.IndexOf(lss.LSSAvatarData.AvatarDescriptor.baseAnimationLayers,lss.LSSAvatarData.AvatarDescriptor.baseAnimationLayers.Single(l => l.type == VRCAvatarDescriptor.AnimLayerType.FX))].animatorController as AnimatorController;
 			
 			
-			var fold = new Foldout(){text = "dafalt",value = false};
+			var fold = new Foldout(){text = "dafalt",value = false ,style = {display = DisplayStyle.None}};
 			InspectorElement.FillDefaultInspector(fold,serializedObject,this);
 			root.Add(fold);
 			
