@@ -220,4 +220,4 @@ jobs:
     needs: create-release
     if: inputs.publish
     with:
-      tag: v${{ steps.update-version.outputs.version }}
+      tag: v${{ needs.create-release.outputs.version }}
