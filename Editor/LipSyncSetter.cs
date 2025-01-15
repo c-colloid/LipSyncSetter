@@ -25,6 +25,7 @@ public class LipSyncSetter : EditorWindow
 
 	LSSAvatarData _lssAvatarData = new LSSAvatarData();
 	List<AnimationClip> _clip;
+	[SerializeField]
 	AnimatorController _animator;
 	string _savefolder;
 	bool _newFXLayer;
@@ -139,7 +140,7 @@ public class LipSyncSetter : EditorWindow
 	    	_savefolder = savefolder;
 	    	
 	    	//新アニメーター作成
-	    	_animator = AssetDatabase.LoadAssetAtPath<AnimatorController>(folderpath + "/Resource/SmartLipSync.controller");
+			_animator = _animator ?? AssetDatabase.LoadAssetAtPath<AnimatorController>(folderpath + "/Resource/SmartLipSync.controller");
 	    	AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(_animator),_savefolder + "/LipSyncFXLayer.controller");
 	    	
 	    	if (!_newFXLayer)
