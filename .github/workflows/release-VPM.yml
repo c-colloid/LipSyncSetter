@@ -125,6 +125,24 @@ jobs:
           rm  ./VpmRepo/vpm.json
           echo ${{ steps.AddedVPMDotJson.outputs.result }} >> ./VpmRepo/vpm.json
 
+      #region FormatJson
+      - name: Get Version Num Only
+        id: VersionNumOnly
+        run: |
+          echo "VersionNumOnly=${{ github.event.inputs.tag#v }}" >> $GITHUB_ENV
+  
+      - name: Format Json
+        id: FormatJson
+        uses: jossef/action-set-json-field@v2
+        env:
+          InputStr: ${{ steps.VPMDotJson.outputs.result }}
+          AddVersion: ${{ steps.RepoAddJsonStr.outputs.result }}
+        with:
+          file: ./VpmRepo/vpm.json
+          field: ${{ env.VersionNumOnly }}
+          value: ${{ env.AddVersion }}
+      #endregion FormatJson
+
       - name: git commit
         run: |
           cd ./VpmRepo
