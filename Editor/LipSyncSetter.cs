@@ -100,8 +100,9 @@ public class LipSyncSetter : EditorWindow
 			
 			root.Q<ObjectField>("FaceMesh").value = _lssAvatarData.AvatarDescriptor.VisemeSkinnedMesh;
 			
-			if (!_lssAvatarData.AvatarDescriptor.baseAnimationLayers[4].animatorController) return;
-			root.Q<ObjectField>("FXLayer").value = _lssAvatarData.AvatarDescriptor.baseAnimationLayers[4].animatorController;
+			var FXAnimatorController = _lssAvatarData.AvatarDescriptor.baseAnimationLayers.SingleOrDefault(l => l.type == VRCAvatarDescriptor.AnimLayerType.FX);
+			if (!FXAnimatorController.animatorController) return;
+			root.Q<ObjectField>("FXLayer").value = FXAnimatorController.animatorController;
 		});
 		
 		//FXレイヤーのオブジェクトフィールドが変更された時
