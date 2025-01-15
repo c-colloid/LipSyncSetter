@@ -21,35 +21,6 @@ namespace LipSyncSetter.Editor.Utilities
 		public static List<AnimationClip> CreateAnime(LSSConfig root , LSSAvatarData LSSAvatarData)
 		{
 			var popups = root.LipSyncs;
-				//root.Q<ListView>("LipSyncList").Query<PopupField<string>>().ToList();
-			
-			//for (int i = 0; i < popups.Count(); i++) {
-			//	var shapekey = popups[i];
-			//	var clip = new AnimationClip();
-			//	var curve = new AnimationCurve();
-			//	//var keyframe = new Keyframe(0.02f,0);
-			//	clip.name = shapekey.label;
-			//	var path = AnimationUtility.CalculateTransformPath((root.Q<ObjectField>("FaceMesh").value as SkinnedMeshRenderer).transform,LSSAvatarData.AvatarDescriptor.transform);
-			//	foreach (var item in popups)
-			//	{
-			//		if (item.text == "disable"||item.text == "-none-") continue;
-			//		curve.keys = null;
-			//		curve.AddKey(0,0);
-			//		if (i < popups.Count()-1)
-			//		{
-			//			bool shapekeybool = false;
-			//			if (item.text == shapekey.text)
-			//				shapekeybool = true;
-			//			//keyframe.value = System.Convert.ToInt32(shapekeybool) * 100;
-			//			//curve.AddKey(keyframe);
-			//			curve = AnimationCurve.Linear(0,0,1/60.0f,System.Convert.ToInt32(shapekeybool) * 100);
-			//		}
-			//		clip.SetCurve(path,typeof(SkinnedMeshRenderer),"blendShape."+ item.text,curve);
-			//	}
-			//	//AssetDatabase.CreateAsset(clip,savefolder + "/v." + clip.name + ".anim");
-			//	cliplist.Add(clip);
-			//}
-			
 			
 			cliplist = popups.Select(p => (new AnimationClip(){name = p.label}
 				,p.value
@@ -100,17 +71,6 @@ namespace LipSyncSetter.Editor.Utilities
 			var popups = root.LipSyncs;
 			List<string> texts = popups.Select(p => p.label).ToList();
 		
-			//foreach (var popup in popups)
-			//{
-			//	texts.Add(popup.label);
-			//}
-			//foreach (var item in clip)
-			//{
-			//	var num = texts.IndexOf(item.state.name);
-			//	if (num < 0)
-			//		continue;
-			//	item.state.motion = cliplist[num];
-			//}
 			states.Select(state =>(state,texts.IndexOf(state.state.name))).Where(i=> i.Item2 >= 0)
 				.ToList().ForEach(i => i.state.state.motion = cliplist[i.Item2]);
 			
@@ -122,38 +82,12 @@ namespace LipSyncSetter.Editor.Utilities
 			//元のFXレイヤーにリップシンクを追加する場合
 			if (!isNewFXLayer)
 			{
-				//AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(_animator),_savefolder + "/LipSyncFXLayer.controller");
 				//サンプルからパラメーターをコピー
-				//foreach (var parameter in sampleanimator.parameters)
-				//{
-				//	//パラメーターが既にある場合スキップ
-				//	var newparameters = animator.parameters.ToList();
-				//	if (newparameters.IndexOf(parameter) < 0)
-				//	{
-				//		animator.AddParameter(parameter);
-				//	}
-				//}
-				
-				//サンプルからレイヤーをコピー
-				//foreach (var layer in sampleanimator.layers)
-				//{
-				//	//LipSyncLayerが既に存在していたらレイヤーを削除
-				//	List<string> newlayers = new List<string>();
-				//	foreach (var newlayer in animator.layers)
-				//	{
-				//		newlayers.Add(newlayer.name);
-				//	}
-				//	if (newlayers.IndexOf(layer.name) >= 0)
-				//	{
-				//		animator.RemoveLayer(newlayers.IndexOf(layer.name));
-				//	}
-				
-				//	AnimatorControllerUtility.AddLayer(animator,layer,true);
-				//}
-				
 				sampleanimator.parameters.Where(p => !animator.parameters.Contains(p))
 					.ToList().ForEach(p => animator.AddParameter(p));
+				//LipSyncLayerが既に存在していたらレイヤーを削除
 				sampleanimator.layers.Select(l => l.name).Where(n => animator.layers.Select(l => l.name).Contains(n)).ToList().ForEach(n => animator.RemoveLayer(Array.IndexOf(animator.layers.Select(l => l.name).ToArray(),n)));
+				//サンプルからレイヤーをコピー
 				sampleanimator.layers.ToList().ForEach(l => AnimatorControllerUtility.AddLayer(animator,l,true));
 				result_animator = animator;
 			}
@@ -162,38 +96,15 @@ namespace LipSyncSetter.Editor.Utilities
 			else
 			{
 				states = temp_animator.layers[0].stateMachine.states.ToList();
-				//foreach (var item in clip)
-				//{
-				//	var num = texts.IndexOf(item.state.name);
-				//	if (num < 0)
-				//		continue;
-				//	item.state.motion = cliplist[num];
-				//}
+				
 				states.Select(state =>(state,texts.IndexOf(state.state.name))).Where(i=> i.Item2 >= 0)
 					.ToList().ForEach(i => i.state.state.motion = cliplist[i.Item2]);
 				if (!animator) return temp_animator;
 				
-				////アバターにあるアニメーターからパラメーターをコピー
-				//foreach (var A_Parameter in animator.parameters)
-				//{
-				//	temp_animator.AddParameter(A_Parameter);
-				//}
-				////アバターにあるアニメーターからレイヤーをコピー
-				//int i = 0;
-				//foreach (var A_layer in animator.layers)
-				//{
-				//	if (i == 0)
-				//	{
-				//		AnimatorControllerUtility.AddLayer(temp_animator,A_layer,true);
-				//	}
-				//	else
-				//	{
-				//		AnimatorControllerUtility.AddLayer(temp_animator,A_layer);
-				//	}
-				//	i++;
-				//}
+				//アバターにあるアニメーターからパラメーターをコピー
 				animator.parameters.Where(p => !temp_animator.parameters.Contains(p))
 					.ToList().ForEach(p => temp_animator.AddParameter(p));
+				//アバターにあるアニメーターからレイヤーをコピー
 				animator.layers.Select((l,index) => (l,index))
 					.ToList().ForEach(i => AnimatorControllerUtility.AddLayer(temp_animator,i.l,i.index == 0 ? true : false));
 				
