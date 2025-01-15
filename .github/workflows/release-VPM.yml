@@ -129,7 +129,8 @@ jobs:
       - name: Get Version Num Only
         id: VersionNumOnly
         run: |
-          echo "VersionNumOnly=${{ github.event.inputs.tag#v }}" >> $GITHUB_ENV
+          TAG=${{ github.event.release.tag }}
+          echo "VersionNumOnly=${ TAG#v }" >> $GITHUB_ENV
   
       - name: Format Json
         id: FormatJson
