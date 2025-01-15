@@ -1,5 +1,5 @@
 {
-  "name": "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}",
+  "name": "LipSyncSetter",
   "author": "ｺﾛｲﾄﾞ",
   "id": "jp.colloid.lipsyncsetter",
   "url": "https://c-colloid.github.io/LipSyncSetter/vpm.json",
