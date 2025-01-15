@@ -214,3 +214,10 @@ jobs:
           set-version "$(version-set-channel "$VERSION" beta 0)"
           git commit -am "chore: prepare for next version: $VERSION"
           git push && git push --tags
+
+  publish-vpm:
+    uses: c-colloid/LipSyncSetter/.github/workflows/release-VPM.yml@master
+    needs: create-release
+    if: inputs.publish
+    with:
+      tag: v${{ env.VERSION }}
