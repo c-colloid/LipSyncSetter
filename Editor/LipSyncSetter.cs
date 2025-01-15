@@ -30,11 +30,7 @@ public class LipSyncSetter : EditorWindow
 	bool _newFXLayer;
 	[SerializeField]
 	Object folder;
-	static string folderpath 
-		//= 
-		//AssetDatabase.GetAssetPath(folder);
-		//AssetDatabase.GUIDToAssetPath("e314b35e356f6cf49a0334514abbfbfb")
-		;
+	static string folderpath;
 		
 	
     [MenuItem("Tools/LipSyncSetter")]
@@ -63,22 +59,20 @@ public class LipSyncSetter : EditorWindow
     	_newFXLayer = false;
     	
         // Each editor window contains a root VisualElement object
-		var root = new ScrollView();
+		var root = new ScrollView(); //UIのRootにScrollViewを付けないとHighlighterが使えない
 		rootVisualElement.Add(root);
 
         // Import UXML
-		var visualTree = UXML != null ? UXML : AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath("f2f22abe2a1b07740ae52427ca8deeb1"));
+		var visualTree = UXML ?? AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(AssetDatabase.GUIDToAssetPath("f2f22abe2a1b07740ae52427ca8deeb1"));
         VisualElement labelFromUXML = visualTree.CloneTree();
-		//labelFromUXML.StretchToParentSize();
 		labelFromUXML.style.flexGrow = 1;
         root.Add(labelFromUXML);
         
-		//root.Q<ObjectField>("AvatarField").objectType = typeof(VRCAvatarDescriptor);
-		//root.Q<ObjectField>("FXLayer").objectType = typeof(RuntimeAnimatorController);
 		root.Q<ObjectField>("NewFXLayer").style.display = DisplayStyle.None;
         
 		LSSBlendShapePanel blendshapepanel = new LSSBlendShapePanel(_lssAvatarData);
 		blendshapepanel.SetLSSBlendShapePanel(root);
+		
         //Avatarのオブジェクトフィールドが変更された時
 		root.Q<ObjectField>("AvatarField").RegisterValueChangedCallback(evt =>
 		{
@@ -94,6 +88,7 @@ public class LipSyncSetter : EditorWindow
 			{
 				root.Q<ObjectField>("FaceMesh").value = null;
 				root.Q<ObjectField>("FXLayer").value = null;
+				
 				var popupfields = root.Query<PopupField<string>>().ToList();
 				foreach (PopupField<string> pop in popupfields)
 				{
@@ -101,6 +96,7 @@ public class LipSyncSetter : EditorWindow
 				}
 				return;
 			}
+			
 			root.Q<ObjectField>("FaceMesh").value = _lssAvatarData.AvatarDescriptor.VisemeSkinnedMesh;
 			
 			if (!_lssAvatarData.AvatarDescriptor.baseAnimationLayers[4].animatorController) return;
@@ -176,18 +172,13 @@ public class LipSyncSetter : EditorWindow
 	        
 	        if (!root.Q<ObjectField>("FXLayer").value && !_newFXLayer){
 		        root.Q<Button>("FXLayerSetting").Focus();
-		        Debug.Log(Highlighter.Highlight(title,"m_fxlayersetting",HighlightSearchMode.Identifier));
-		        EditorApplication.delayCall += () => {
-		        	Debug.Log(Highlighter.activeVisible);
-		        	
-			        
-		        };
+		        Highlighter.Highlight(title,"m_fxlayersetting",HighlightSearchMode.Identifier);
+		        
 	        	Editor.Utilities.LSSEditorUtility.DisplayDialog("FXLayer is null",
 @"FXLayerにアニメーターコントローラーが割り当てられていません
 新規アニメーターの作成を行ってください"
 		        	,"OK");
 				        
-		        //Highlighter.Stop();
 		        return;
 	        }
 	        
@@ -213,8 +204,7 @@ public class LipSyncSetter : EditorWindow
 	    	AssetDatabase.SaveAssets();
 			AssetDatabase.Refresh();
 	    	if (string.IsNullOrEmpty(savefolder)) return;
-	    	//if (!_newFXLayer)
-	    		_savefolder = savefolder;
+    		_savefolder = savefolder;
 	    	
 	    	//アニメーション・アニメーター作成
 	        CreateAnime();
