@@ -144,16 +144,10 @@ public class LipSyncSetter : EditorWindow
 			_animator = _animator ?? AssetDatabase.LoadAssetAtPath<AnimatorController>(folderpath + "/Resource/SmartLipSync.controller");
 	    	AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(_animator),_savefolder + "/LipSyncFXLayer.controller");
 	    	
-	    	if (!_newFXLayer)
-	    	{
-	    		ObjectField newfxlayer = root.Q<ObjectField>("NewFXLayer");
-	    		newfxlayer.style.display = DisplayStyle.Flex;
-	    		newfxlayer.value = AssetDatabase.LoadAssetAtPath<AnimatorController>(savefolder+"/LipSyncFXLayer.controller");
-	    	}
-	    	else
-	    	{
-	    		root.Q<ObjectField>(null,null,"NewFXLayer").value = AssetDatabase.LoadAssetAtPath<AnimatorController>(savefolder+"/LipSyncFXLayer.controller");
-	    	}
+			ObjectField newfxlayer = root.Q<ObjectField>("NewFXLayer");
+			newfxlayer.style.display = DisplayStyle.Flex;
+			newfxlayer.value = AssetDatabase.LoadAssetAtPath<AnimatorController>(savefolder+"/LipSyncFXLayer.controller");
+	    	
 	    	_newFXLayer = true;
         };
         
