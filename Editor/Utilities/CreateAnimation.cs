@@ -16,7 +16,7 @@ namespace LipSyncSetter.Editor.Utilities
 	{
 		static List<AnimationClip> cliplist = new List<AnimationClip>();
 		static LSSConfig lssroot;
-		const string SampleAnimatorGUID = "c349e20dc611ea543b1c93cc8db32def";
+		const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
 		
 		public static List<AnimationClip> CreateAnime(LSSConfig root , LSSAvatarData LSSAvatarData)
 		{
