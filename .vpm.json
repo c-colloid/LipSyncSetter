@@ -25,9 +25,9 @@
           "url": "https://github.com/c-colloid/LipSyncSetter/releases/download/v1.4.1/LipSyncSetter-v1.4.1.zip",
           "repo": "https://c-colloid.github.io/LipSyncSetter/.vpm.json"
         },
-        "1.4.2-beta.2": {
+        "1.4.2-beta.1": {
           "name": "jp.colloid.lipsyncsetter",
-          "version": "1.4.2-beta.2",
+          "version": "1.4.2-beta.1",
           "displayName": "LipSyncSetter",
           "description": "Generate animation-based LipSync.",
           "unity": "2019.3",
@@ -41,7 +41,7 @@
           "author": {
             "name": "ｺﾛｲﾄﾞ"
           },
-          "url": "https://github.com/c-colloid/LipSyncSetter/releases/download/v1.4.2-beta.2/LipSyncSetter-v1.4.2-beta.2.zip",
+          "url": "https://github.com/c-colloid/LipSyncSetter/releases/download/v1.4.2-beta.2/LipSyncSetter-v1.4.2-beta.1.zip",
           "repo": "https://c-colloid.github.io/LipSyncSetter/.vpm.json"
         }
       }
