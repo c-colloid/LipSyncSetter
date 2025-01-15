@@ -118,7 +118,7 @@ jobs:
             
             Installer unitypackage for this version is [here][installer for this].
 
-            [installer for this]: vcc://vpm/addRepo?url=https://c-colloid.github.io/LipSyncSetter/.vpm.json
+            [installer for this]: https://c-colloid.github.io/LipSyncSetter/.redirect.html
             
             **This is SNAPSHOT, not a stable release. make sure this may have many bugs.**
           release-note-heading: |
@@ -127,7 +127,7 @@ jobs:
             
             Installer unitypackage for this version is [here][installer for this].
 
-            [installer for this]: vcc://vpm/addRepo?url=https://c-colloid.github.io/LipSyncSetter/.vpm.json
+            [installer for this]: https://c-colloid.github.io/LipSyncSetter/.redirect.html
       - name: Upload CHANGELOG.md
         if: ${{ !fromJSON(env.PRERELEASE) }}
         uses: actions/upload-artifact@v3
