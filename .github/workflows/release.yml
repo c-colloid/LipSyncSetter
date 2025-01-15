@@ -216,7 +216,7 @@ jobs:
           git push && git push --tags
 
   publish-vpm:
-    uses: c-colloid/LipSyncSetter/.github/workflows/release-VPM.yml@master
+    uses: c-colloid/LipSyncSetter/.github/workflows/release-VPM.yml@main
     needs: create-release
     if: inputs.publish
     with:
