@@ -8,6 +8,7 @@
 ### 変更
 * FXレイヤーを正確に取得できるように変更
 * AvatarDicriptorが無くてもAnimatorConatrollerの作成ができるように変更
+* Inspectorの表示を調整
 
 ## [1.4.1]2024.12.18
 ### バグ修正
