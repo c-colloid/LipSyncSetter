@@ -167,9 +167,16 @@ public class LipSyncSetter : EditorWindow
         
         //Createボタンを押した時
         root.Q<Button>("Create").clicked += () => {
-	    	if (rootVisualElement.Q<ObjectField>("FaceMesh").value == null) return;
-	        //_clip = new List<AnimationClip>();
-	        
+	        if (root.Q<ObjectField>("FaceMesh").value == null){
+	        	root.Q<ObjectField>("FaceMesh").Focus();
+		        Highlighter.Highlight(title,"m_facemesh",HighlightSearchMode.Identifier);
+		        
+	        	Editor.Utilities.LSSEditorUtility.DisplayDialog("FaceMesh is null",
+@"FaceMeshが設定されていません"
+,"OK");
+		        	
+	        	return;
+	        }
 	        
 	        if (!root.Q<ObjectField>("FXLayer").value && !_newFXLayer){
 		        root.Q<Button>("FXLayerSetting").Focus();

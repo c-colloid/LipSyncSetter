@@ -3,7 +3,9 @@
     <Style src="project://database/Assets/LipSyncSetter/Editor/USS/LipSyncSetter.uss?fileID=7433441132597879392&amp;guid=f78478e0b8f5bb948a549f1890310724&amp;type=3#LipSyncSetter" />
     <uie:ObjectField label="Avatar" name="AvatarField" type="VRC.SDK3.Avatars.Components.VRCAvatarDescriptor, VRCSDK3A" tooltip="対象アバター" />
     <uie:PropertyField style="border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
-    <ui:Instance template="LSSBlendShapePanel" name="LSSBlendShapePanel" style="flex-grow: 1;" />
+    <ui:Instance template="LSSBlendShapePanel" name="LSSBlendShapePanel" style="flex-grow: 1;">
+        <AttributeOverrides element-name="FaceMesh" binding-path="m_facemesh" />
+    </ui:Instance>
     <ui:ListView focusable="true" name="LipSyncList" style="height: 100%; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; display: none;" />
     <ui:Label text="LipSync" name="Title" style="display: none;" />
     <uie:ObjectField label="Face Mesh" name="FaceMesh" style="display: none;" />
