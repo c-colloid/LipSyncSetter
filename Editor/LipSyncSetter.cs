@@ -212,8 +212,13 @@ public class LipSyncSetter : EditorWindow
 	    	//アニメーション・アニメーター作成
 	        CreateAnime();
 	        var animator = Editor.Utilities.LSSUtility.CreateAnimator(rootVisualElement,_lssAvatarData,_newFXLayer);
-	        Editor.Utilities.SetPlayableLayers.SetPlayableToCustom(_lssAvatarData.AvatarDescriptor);
-	        Editor.Utilities.SetPlayableLayers.SetFXToCustom(_lssAvatarData.AvatarDescriptor, animator);
+	        
+	        //AvatarDiscriptorに作成したAnimatorを割り当て
+	        if (_lssAvatarData.AvatarDescriptor){
+	        	Editor.Utilities.SetPlayableLayers.SetPlayableToCustom(_lssAvatarData.AvatarDescriptor);
+		        Editor.Utilities.SetPlayableLayers.SetFXToCustom(_lssAvatarData.AvatarDescriptor, animator);
+	        }
+	        
 	        EditorUtility.DisplayDialog("LipSyncSetter","リップシンクの作成が終了しました!","よっしゃー！");
         };
         
