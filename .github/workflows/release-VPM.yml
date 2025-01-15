@@ -129,8 +129,9 @@ jobs:
       - name: Get Version Num Only
         id: VersionNumOnly
         run: |
-          TAG=${{ github.event.release.tag }}
-          echo "VersionNumOnly=${ TAG#v }" >> $GITHUB_ENV
+          tag=${{ github.event.inputs.tag }}
+          version=${tag#v}
+          echo "version=$version" >> "$GITHUB_OUTPUT"
   
       - name: Format Json
         id: FormatJson
@@ -140,8 +141,8 @@ jobs:
           AddVersion: ${{ steps.RepoAddJsonStr.outputs.result }}
         with:
           file: ./VpmRepo/vpm.json
-          field: ${{ env.VersionNumOnly }}
-          value: ${{ env.AddVersion }}
+          field: "${{ steps.VersionNumOnly.outputs.version }}"
+          value: "${{ env.AddVersion }}"
       #endregion FormatJson
 
       - name: git commit
