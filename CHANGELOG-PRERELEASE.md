@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.4.2-beta.1]
+
+
 ## [1.4.1]2024.12.18
 ### バグ修正
 * Non-Destructive Modular Frameworkを導入していない場合エラーが出る問題を修正
