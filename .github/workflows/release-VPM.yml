@@ -141,8 +141,8 @@ jobs:
           AddVersion: ${{ steps.RepoAddJsonStr.outputs.result }}
         with:
           file: ./VpmRepo/vpm.json
-          field: "${{ steps.VersionNumOnly.outputs.version }}"
-          value: "${{ env.AddVersion }}"
+          field: ""
+          value: ""
       #endregion FormatJson
 
       - name: git commit
