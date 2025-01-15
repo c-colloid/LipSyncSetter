@@ -141,8 +141,8 @@ jobs:
           AddVersion: ${{ steps.RepoAddJsonStr.outputs.result }}
         with:
           file: ./VpmRepo/vpm.json
-          field: ""
-          value: ""
+          field: "name"
+          value: "${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}"
       #endregion FormatJson
 
       - name: git commit
