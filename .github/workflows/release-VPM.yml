@@ -69,7 +69,7 @@ jobs:
       - name: MoveToVar
         id: VPMDotJson
         run: |
-          Temp=`cat ./VpmRepo/vpm.json`
+          Temp=`cat ./VpmRepo/.vpm.json`
           echo 'result=' $Temp >> "$GITHUB_OUTPUT"
 
 
@@ -122,8 +122,8 @@ jobs:
 
       - name: Write Json
         run: |
-          rm  ./VpmRepo/vpm.json
-          echo ${{ steps.AddedVPMDotJson.outputs.result }} >> ./VpmRepo/vpm.json
+          rm  ./VpmRepo/.vpm.json
+          echo ${{ steps.AddedVPMDotJson.outputs.result }} >> ./VpmRepo/.vpm.json
 
       #region FormatJson
       - name: Get Version Num Only
@@ -144,7 +144,7 @@ jobs:
           InputStr: ${{ steps.VPMDotJson.outputs.result }}
           AddVersion: ${{ steps.RepoAddJsonStr.outputs.result }}
         with:
-          file: ./VpmRepo/vpm.json
+          file: ./VpmRepo/.vpm.json
           field: "name"
           value: ${{ steps.repository.outputs.name }}
       #endregion FormatJson
@@ -154,6 +154,6 @@ jobs:
           cd ./VpmRepo
           git config user.name  "GitHub Action"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ./vpm.json
+          git add ./.vpm.json
           git commit -m "Add LSS New Version ${{ github.event.inputs.tag }}!!"
           git push origin
