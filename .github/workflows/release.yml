@@ -116,7 +116,7 @@ jobs:
             Version ${{ env.VERSION }}
             ---
             
-            Installer unitypackage for this version is [here][installer for this].
+            Add to VCC/ALCOM from [here][installer for this].
 
             [installer for this]: https://c-colloid.github.io/LipSyncSetter/.redirect.html
             
@@ -125,7 +125,7 @@ jobs:
             Version ${{ env.VERSION }}
             ---
             
-            Installer unitypackage for this version is [here][installer for this].
+            Add to VCC/ALCOM from [here][installer for this].
 
             [installer for this]: https://c-colloid.github.io/LipSyncSetter/.redirect.html
       - name: Upload CHANGELOG.md
