@@ -132,6 +132,10 @@ jobs:
           tag=${{ github.event.inputs.tag }}
           version=${tag#v}
           echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Get RepositoryName
+        id: repository
+        run: echo "name=${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}" >> $GITHUB_OUTPUT
   
       - name: Format Json
         id: FormatJson
@@ -142,7 +146,7 @@ jobs:
         with:
           file: ./VpmRepo/vpm.json
           field: "name"
-          value: ${GITHUB_REPOSITORY#${GITHUB_REPOSITORY_OWNER}/}
+          value: ${{ steps.repository.outputs.name }}
       #endregion FormatJson
 
       - name: git commit
