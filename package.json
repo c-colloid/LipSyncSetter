@@ -5,15 +5,13 @@
   "description": "Generate animation-based LipSync.",
   "unity": "2019.3",
   "documentationUrl": "",
-  "changelogUrl": "",
-  "licensesUrl": "",
+  "changelogUrl": "https://c-colloid.github.io/LipSyncSetter/CHANGELOG.md",
+  "licensesUrl": "https://c-colloid.github.io/LipSyncSetter/LICENSE.txt",
   "license": "MIT",
   "keywords": ["LipSync"],
   "author": {
-    "name": "ｺﾛｲﾄﾞ",
-    "email": "",
-    "url": ""
+    "name": "ｺﾛｲﾄﾞ"
   },
-  "url" : "",
+  "url" : "***",
   "repo" : "https://c-colloid.github.io/LipSyncSetter/vpm.json"
 }
