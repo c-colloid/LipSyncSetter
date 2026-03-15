@@ -16,7 +16,7 @@ namespace LipSyncSetter.Editor.Utilities
 	{
 		static List<AnimationClip> cliplist = new List<AnimationClip>();
 		static LSSConfig lssroot;
-		const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
+		public const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
 		
 		public static List<AnimationClip> CreateAnime(LSSConfig root , LSSAvatarData LSSAvatarData)
 		{
@@ -152,40 +152,15 @@ namespace LipSyncSetter.Editor.Utilities
 			lssroot.DefaultAnimator = root?.Root?.DefaultAnimator;
 			lssroot.NewAnimator = root?.Root?.NewAnimator;
 		}
-		
-		public static AnimatorController CreateAnimator(LipSyncSetterMonoBehavior root,LSSAvatarData LSSAvatarData)
-		{
-			if (cliplist.Count() == 0) return null;
-			var sampleanimator = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GUIDToAssetPath(SampleAnimatorGUID));
-			var clip = sampleanimator.layers[0].stateMachine.states.ToList();
-			var popups = root.LipSyncs;
-			List<string> texts = popups.Select(p => p.label).ToList();
-			
-			clip.Select(c =>(c,texts.IndexOf(c.state.name))).Where(i=> i.Item2 >= 0)
-				.ToList().ForEach(i => i.c.state.motion = cliplist[i.Item2]);
-			
-			var baseLayer = LSSAvatarData.AvatarDescriptor.baseAnimationLayers;
-			ScriptableObject.DestroyImmediate(lssroot);
-			
-			var index = Array.IndexOf(baseLayer, baseLayer.Single(l => l.type == VRCAvatarDescriptor.AnimLayerType.FX));
-			var animator = baseLayer[index].animatorController as AnimatorController;
-		
-			var temp_animator = new AnimatorController(){name = "FX_generate_by_LSS"};
-			temp_animator.parameters = sampleanimator.parameters.Select(p => p).ToArray();
-			temp_animator.layers = sampleanimator.layers.Select(l => l).ToArray();
-			
-			if (animator) 
-			{
-				animator.parameters.Where(p => !temp_animator.parameters.Contains(p))
-					.ToList().ForEach(p => temp_animator.AddParameter(p));
-				animator.layers.Select((l,index) => (l,index))
-					.ToList().ForEach(i => temp_animator.AddLayer(i.l));
-			}
 
-			baseLayer[index].isDefault = false;
-			baseLayer[index].animatorController = temp_animator;
-			
-			return temp_animator;
+		public static LSSConfig BuildConfig(LipSyncSetterMonoBehavior mono)
+		{
+			var config = new LSSConfig();
+			config.LipSyncs = mono.LipSyncs;
+			config.FaceMesh = mono.FaceMesh;
+			config.DefaultAnimator = mono?.Root?.DefaultAnimator;
+			config.NewAnimator = mono?.Root?.NewAnimator;
+			return config;
 		}
 	}
 }
