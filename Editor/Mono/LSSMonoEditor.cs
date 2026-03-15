@@ -20,28 +20,35 @@ namespace LipSyncSetter.Editor
 		
 		public override VisualElement CreateInspectorGUI() {
 			//var baseroot = base.CreateInspectorGUI();
-			
+
 			VisualElement root = new VisualElement();
 			root.Add(UXML.CloneTree());
-			root.Bind(serializedObject);
-			
+
 			LipSyncSetterMonoBehavior lss = target as LipSyncSetterMonoBehavior;
+
+			// AvatarDescriptor を先に設定してからキャプチャする
+			lss.LSSAvatarData.AvatarDescriptor = lss.transform.GetComponentInParent<VRCAvatarDescriptor>();
+
 			var LipSyncBlendShape = lss.LSSAvatarData.LipSyncBlendShape;
-			var AvatarDescriptor = lss.LSSAvatarData.AvatarDescriptor;
 			LSSBlendShapePanel lssBlendShapePanel = new LSSBlendShapePanel(lss.LSSAvatarData);
 			lssBlendShapePanel.SetLSSBlendShapePanel(root);
-			
-			lss.LSSAvatarData.AvatarDescriptor = lss.transform.GetComponentInParent<VRCAvatarDescriptor>() != null ? lss.transform.GetComponentInParent<VRCAvatarDescriptor>() : null;
-			
+
 			root.Q<ObjectField>("FaceMesh").bindingPath = "_faceMesh";
-			
+
 			var visemeList = root.Q<ListView>("LipSyncList");
 			root.Q<ObjectField>("FaceMesh").RegisterValueChangedCallback(evt => {
+				// コールバック時点の最新の AvatarDescriptor を参照する
+				var avatarDescriptor = lss.LSSAvatarData.AvatarDescriptor;
+				if (avatarDescriptor == null) return;
+
 				visemeList.Query<PopupField<string>>().ToList().Select((p,index) => (p,index)).ToList().ForEach(o => {
-					var index = LipSyncBlendShape.IndexOf(o.index < 15 ? AvatarDescriptor.VisemeBlendShapes[o.index] : "disable");
+					var index = LipSyncBlendShape.IndexOf(o.index < 15 ? avatarDescriptor.VisemeBlendShapes[o.index] : "disable");
 					o.p.value = LipSyncBlendShape.ElementAt(index < 0 ? 0 : index);
 				});
 			});
+
+			// Bind は全てのコールバック登録後に呼ぶ
+			root.Bind(serializedObject);
 			
 			visemeList.bindItem = (VisualElement ve,int i) => {
 				
