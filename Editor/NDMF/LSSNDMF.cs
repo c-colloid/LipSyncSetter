@@ -1,13 +1,12 @@
-﻿//using System;
-using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 using UnityEditor;
-using UnityEditor.UIElements;
+using UnityEditor.Animations;
 using nadena.dev.ndmf;
+using nadena.dev.ndmf.animator;
 using LipSyncSetter.Editor.Utilities;
+using VRC.SDK3.Avatars.Components;
 
 [assembly: ExportsPlugin(typeof(LipSyncSetter.NDMF.LSSNDMF))]
 namespace LipSyncSetter.NDMF
@@ -16,19 +15,69 @@ namespace LipSyncSetter.NDMF
 	{
 		protected override void Configure()
 		{
-			InPhase(BuildPhase.Generating).Run("Generate LipSync",ctx =>{
-				var target = ctx?.AvatarRootObject?.GetComponentInChildren<LipSyncSetterMonoBehavior>();
-				if (target == null) return;
-				target.LSSAvatarData.AvatarDescriptor = ctx.AvatarDescriptor;
-				LSSUtility.CreateAnime(target,target.LSSAvatarData);
-				LSSUtility.CreateAnimator(target,target.LSSAvatarData);
-				SetPlayableLayers.SetPlayableToCustom(ctx.AvatarDescriptor);
-				SetPlayableLayers.SetFXToCustom(ctx.AvatarDescriptor);
-			});
-			
-			InPhase(BuildPhase.Generating).Run("Remove Component", ctx => {
-				Object.DestroyImmediate(ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject);
-			});
+			InPhase(BuildPhase.Generating)
+				.WithRequiredExtension(typeof(VirtualControllerContext), seq =>
+				{
+					seq.Run("Generate LipSync", GenerateLipSync);
+					seq.Run("Remove Component", ctx =>
+					{
+						Object.DestroyImmediate(
+							ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject
+						);
+					});
+				});
+		}
+
+		private static void GenerateLipSync(BuildContext ctx)
+		{
+			var target = ctx.AvatarRootObject?.GetComponentInChildren<LipSyncSetterMonoBehavior>();
+			if (target == null) return;
+
+			target.LSSAvatarData.AvatarDescriptor = ctx.AvatarDescriptor;
+			var config = LSSAnimationBuilder.BuildConfig(target);
+			var builder = new LSSAnimationBuilder(config);
+			var clips = builder.CreateAnime(target.LSSAvatarData);
+			if (clips.Count == 0) return;
+
+			var controllerCtx = ctx.Extension<VirtualControllerContext>();
+			var fxController = (VirtualAnimatorController)controllerCtx.Controllers[VRCAvatarDescriptor.AnimLayerType.FX];
+
+			// サンプルアニメーターを読み込み、VirtualControllerContext 経由で deep clone
+			var sampleAnimator = AssetDatabase.LoadAssetAtPath<AnimatorController>(
+				AssetDatabase.GUIDToAssetPath(LSSAnimationBuilder.SampleAnimatorGUID)
+			);
+			var clonedSample = controllerCtx.Clone(sampleAnimator);
+
+			// クローンされた VirtualState にアニメーションクリップを割り当て
+			var labels = config.LipSyncs.Select(p => p.label).ToList();
+			foreach (var layer in clonedSample.Layers)
+			{
+				if (layer.StateMachine == null) continue;
+				foreach (var state in layer.StateMachine.AllStates())
+				{
+					var labelIndex = labels.IndexOf(state.Name);
+					if (labelIndex >= 0)
+					{
+						state.Motion = controllerCtx.Clone(clips[labelIndex]);
+					}
+				}
+			}
+
+			// クローンされたレイヤーを FX コントローラーに追加
+			foreach (var layer in clonedSample.Layers)
+			{
+				layer.DefaultWeight = 1f;
+				fxController.AddLayer(LayerPriority.Default, layer);
+			}
+
+			// パラメータをマージ
+			var parameters = fxController.Parameters;
+			foreach (var p in clonedSample.Parameters)
+			{
+				if (!parameters.ContainsKey(p.Key))
+					parameters = parameters.Add(p.Key, p.Value);
+			}
+			fxController.Parameters = parameters;
 		}
 	}
 }
