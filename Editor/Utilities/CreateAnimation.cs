@@ -15,7 +15,7 @@ namespace LipSyncSetter.Editor.Utilities
 	{
 		private List<AnimationClip> _clips = new List<AnimationClip>();
 		private readonly LSSConfig _config;
-		const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
+		public const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
 
 		public LSSAnimationBuilder(LSSConfig config)
 		{
@@ -116,37 +116,6 @@ namespace LipSyncSetter.Editor.Utilities
 			}
 
 			return result_animator;
-		}
-
-		public AnimatorController CreateAnimatorForNDMF(LSSAvatarData lssAvatarData)
-		{
-			if (_clips.Count == 0) return null;
-			var sampleanimator = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GUIDToAssetPath(SampleAnimatorGUID));
-			var states = sampleanimator.layers[0].stateMachine.states.ToList();
-
-			AssignClipsToStates(states);
-
-			var baseLayer = lssAvatarData.AvatarDescriptor.baseAnimationLayers;
-
-			var index = Array.IndexOf(baseLayer, baseLayer.Single(l => l.type == VRCAvatarDescriptor.AnimLayerType.FX));
-			var animator = baseLayer[index].animatorController as AnimatorController;
-
-			var temp_animator = new AnimatorController(){name = "FX_generate_by_LSS"};
-			temp_animator.parameters = sampleanimator.parameters.Select(p => p).ToArray();
-			temp_animator.layers = sampleanimator.layers.Select(l => l).ToArray();
-
-			if (animator)
-			{
-				animator.parameters.Where(p => !temp_animator.parameters.Contains(p))
-					.ToList().ForEach(p => temp_animator.AddParameter(p));
-				animator.layers.Select((l,idx) => (l,idx))
-					.ToList().ForEach(i => AnimatorControllerUtility.AddLayer(temp_animator,i.l,i.idx == 0));
-			}
-
-			baseLayer[index].isDefault = false;
-			baseLayer[index].animatorController = temp_animator;
-
-			return temp_animator;
 		}
 
 		private void AssignClipsToStates(List<ChildAnimatorState> states)
