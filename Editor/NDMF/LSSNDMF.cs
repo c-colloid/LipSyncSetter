@@ -1,4 +1,4 @@
-﻿//using System;
+//using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,12 +20,14 @@ namespace LipSyncSetter.NDMF
 				var target = ctx?.AvatarRootObject?.GetComponentInChildren<LipSyncSetterMonoBehavior>();
 				if (target == null) return;
 				target.LSSAvatarData.AvatarDescriptor = ctx.AvatarDescriptor;
-				LSSUtility.CreateAnime(target,target.LSSAvatarData);
-				LSSUtility.CreateAnimator(target,target.LSSAvatarData);
+				var config = LSSAnimationBuilder.BuildConfig(target);
+				var builder = new LSSAnimationBuilder(config);
+				builder.CreateAnime(target.LSSAvatarData);
+				builder.CreateAnimatorForNDMF(target.LSSAvatarData);
 				SetPlayableLayers.SetPlayableToCustom(ctx.AvatarDescriptor);
 				SetPlayableLayers.SetFXToCustom(ctx.AvatarDescriptor);
 			});
-			
+
 			InPhase(BuildPhase.Generating).Run("Remove Component", ctx => {
 				Object.DestroyImmediate(ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject);
 			});
