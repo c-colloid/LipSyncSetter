@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace LipSyncSetter.Editor.Manipulator
+namespace LipSyncSetter.Editor.Manipulators
 {
 	public class ClickFieldManipulator : Manipulator
 	{
