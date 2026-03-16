@@ -19,11 +19,14 @@ namespace LipSyncSetter.NDMF
 				.WithRequiredExtension(typeof(VirtualControllerContext), seq =>
 				{
 					seq.Run("Generate LipSync", GenerateLipSync);
+					seq.Run("Setup VoiceBoost Menu", SetupVoiceBoostMenu);
 					seq.Run("Remove Component", ctx =>
 					{
-						Object.DestroyImmediate(
-							ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject
-						);
+						var lssObj = ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject;
+						if (lssObj != null) Object.DestroyImmediate(lssObj);
+
+						var voiceBoostObj = ctx.AvatarRootTransform.GetComponentInChildren<LSSVoiceBoost>()?.gameObject;
+						if (voiceBoostObj != null) Object.DestroyImmediate(voiceBoostObj);
 					});
 				});
 		}
@@ -103,6 +106,17 @@ namespace LipSyncSetter.NDMF
 					parameters = parameters.Add(p.Key, p.Value);
 			}
 			fxController.Parameters = parameters;
+		}
+
+		private static void SetupVoiceBoostMenu(BuildContext ctx)
+		{
+			var voiceBoost = ctx.AvatarRootObject?.GetComponentInChildren<LSSVoiceBoost>();
+			if (voiceBoost == null) return;
+
+			var targetMenu = voiceBoost.InstallTargetMenu;
+			var expressionParameters = ctx.AvatarDescriptor.expressionParameters;
+
+			LSSAnimationBuilder.AddVoiceBoostToMenu(targetMenu, expressionParameters);
 		}
 	}
 }

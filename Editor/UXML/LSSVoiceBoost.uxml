@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <uie:ObjectField label="Install Target Menu" name="InstallTargetMenu" binding-path="_installTargetMenu" type="VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionsMenu, VRCSDK3A" tooltip="VoiceBoostを追加するExpressionMenu" />
+</ui:UXML>
