@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -45,8 +45,9 @@ namespace LipSyncSetter.Editor.Utilities
 			return config;
 		}
 
-		public List<AnimationClip> CreateAnime(LSSAvatarData lssAvatarData)
+		public List<AnimationClip> CreateAnime(LSSAvatarData lssAvatarData, AnimationCurve curve = null)
 		{
+			curve ??= AnimationCurve.Linear(0, 0, 1 / 60f, 100);
 			var popups = _config.LipSyncs;
 
 			_clips = popups.Select(p => (new AnimationClip(){name = p.label}
@@ -64,7 +65,7 @@ namespace LipSyncSetter.Editor.Utilities
 							lssAvatarData.AvatarDescriptor.transform),
 						typeof(SkinnedMeshRenderer),
 						"blendShape."+ p.value,
-						AnimationCurve.Linear(0,0,1/60.0f,System.Convert.ToInt32(p.value == c.value) * 100)
+							p.value == c.value ? curve : AnimationCurve.Constant(0,1/60f,0)
 						);
 					}
 					);
