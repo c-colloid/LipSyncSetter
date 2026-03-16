@@ -211,8 +211,8 @@ public class LipSyncSetter : EditorWindow
 	    	//アニメーション・アニメーター作成
 	    	var config = Editor.Utilities.LSSAnimationBuilder.BuildConfig(rootVisualElement);
 	    	var builder = new Editor.Utilities.LSSAnimationBuilder(config);
-	        CreateAnime(builder);
-	        var animator = builder.CreateAnimator(_lssAvatarData,_newFXLayer);
+	        var clips = CreateAnime(builder);
+	        var animator = builder.CreateAnimator(_lssAvatarData, clips, _newFXLayer);
 
 	        //AvatarDiscriptorに作成したAnimatorを割り当て
 	        if (_lssAvatarData.AvatarDescriptor){
@@ -225,14 +225,16 @@ public class LipSyncSetter : EditorWindow
 
     }
 
-    public void CreateAnime(Editor.Utilities.LSSAnimationBuilder builder)
+    public List<AnimationClip> CreateAnime(Editor.Utilities.LSSAnimationBuilder builder)
     {
-	    builder.CreateAnime(_lssAvatarData).Select((clip,index) => (clip,index))
+	    var clips = builder.CreateAnime(_lssAvatarData);
+	    clips.Select((clip,index) => (clip,index))
 		    .ToList().ForEach(c => {
 			    EditorUtility.DisplayCancelableProgressBar("Create AnimetionClips",$"Create {c.clip.name}.anim",c.index/15);
 			    AssetDatabase.CreateAsset(c.clip,_savefolder + "/v." + c.clip.name + ".anim");
 		    });
 	    EditorUtility.ClearProgressBar();
+	    return clips;
     }
 }
 }

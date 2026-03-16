@@ -13,7 +13,6 @@ namespace LipSyncSetter.Editor.Utilities
 	using VRC.SDK3.Avatars.Components;
 	public class LSSAnimationBuilder
 	{
-		private List<AnimationClip> _clips = new List<AnimationClip>();
 		private readonly LSSConfig _config;
 		public const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
 
@@ -50,7 +49,7 @@ namespace LipSyncSetter.Editor.Utilities
 			curve ??= AnimationCurve.Linear(0, 0, 1 / 60f, 100);
 			var popups = _config.LipSyncs;
 
-			_clips = popups.Select(p => (new AnimationClip(){name = p.label}
+			var clips = popups.Select(p => (new AnimationClip(){name = p.label}
 				,p.value
 				))
 				.Select(c =>
@@ -74,16 +73,16 @@ namespace LipSyncSetter.Editor.Utilities
 				)
 				.ToList();
 
-			return _clips;
+			return clips;
 		}
 
-		public AnimatorController CreateAnimator(LSSAvatarData lssAvatarData, bool isNewFXLayer = false)
+		public AnimatorController CreateAnimator(LSSAvatarData lssAvatarData, List<AnimationClip> clips, bool isNewFXLayer = false)
 		{
-			if (_clips.Count == 0) return null;
+			if (clips.Count == 0) return null;
 			var sampleanimator = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GUIDToAssetPath(SampleAnimatorGUID));
 			var states = sampleanimator.layers[0].stateMachine.states.ToList();
 
-			AssignClipsToStates(states);
+			AssignClipsToStates(states, clips);
 
 			var animator = _config.DefaultAnimator;
 			var temp_animator = _config.NewAnimator;
@@ -101,7 +100,7 @@ namespace LipSyncSetter.Editor.Utilities
 			{
 				states = temp_animator.layers[0].stateMachine.states.ToList();
 
-				AssignClipsToStates(states);
+				AssignClipsToStates(states, clips);
 				if (!animator) return temp_animator;
 
 				animator.parameters.Where(p => !temp_animator.parameters.Contains(p))
@@ -119,12 +118,12 @@ namespace LipSyncSetter.Editor.Utilities
 			return result_animator;
 		}
 
-		private void AssignClipsToStates(List<ChildAnimatorState> states)
+		private void AssignClipsToStates(List<ChildAnimatorState> states, List<AnimationClip> clips)
 		{
 			var labels = _config.LipSyncs.Select(p => p.label).ToList();
 			states.Select(state => (state, labels.IndexOf(state.state.name)))
 				.Where(i => i.Item2 >= 0)
-				.ToList().ForEach(i => i.state.state.motion = _clips[i.Item2]);
+				.ToList().ForEach(i => i.state.state.motion = clips[i.Item2]);
 		}
 	}
 }
