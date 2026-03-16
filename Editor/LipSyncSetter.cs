@@ -1,4 +1,4 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
@@ -141,7 +141,9 @@ public class LipSyncSetter : EditorWindow
 	    	_savefolder = savefolder;
 
 	    	//新アニメーター作成
-			_animator = _animator ?? AssetDatabase.LoadAssetAtPath<AnimatorController>(folderpath + "/Resource/SmartLipSync.controller");
+			_animator = _animator ?? AssetDatabase.LoadAssetAtPath<AnimatorController>(
+				AssetDatabase.GUIDToAssetPath(Editor.Utilities.LSSAnimationBuilder.SampleAnimatorGUID)
+			);
 	    	AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(_animator),_savefolder + "/LipSyncFXLayer.controller");
 
 			ObjectField newfxlayer = root.Q<ObjectField>("NewFXLayer");

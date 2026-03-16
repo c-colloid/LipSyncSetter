@@ -15,7 +15,7 @@ namespace LipSyncSetter.Editor.Utilities
 	public class LSSAnimationBuilder
 	{
 		private readonly LSSConfig _config;
-		public const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
+		public const string SampleAnimatorGUID = "d957552f3f56f1a41b975c602ffc6e6d";
 
 		public LSSAnimationBuilder(LSSConfig config)
 		{
