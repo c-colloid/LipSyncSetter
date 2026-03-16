@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Animations;
@@ -219,6 +220,14 @@ public class LipSyncSetter : EditorWindow
 	        if (_lssAvatarData.AvatarDescriptor){
 	        	Editor.Utilities.SetPlayableLayers.SetPlayableToCustom(_lssAvatarData.AvatarDescriptor);
 		        Editor.Utilities.SetPlayableLayers.SetFXToCustom(_lssAvatarData.AvatarDescriptor, animator);
+	        }
+
+	        // VoiceBoost メニュー追加
+	        var voiceBoostMenu = root.Q<ObjectField>("VoiceBoostMenu").value as VRCExpressionsMenu;
+	        if (voiceBoostMenu != null && _lssAvatarData.AvatarDescriptor?.expressionParameters != null)
+	        {
+	        	Editor.Utilities.LSSAnimationBuilder.AddVoiceBoostToMenu(
+	        		voiceBoostMenu, _lssAvatarData.AvatarDescriptor.expressionParameters);
 	        }
 
 	        EditorUtility.DisplayDialog("LipSyncSetter","リップシンクの作成が終了しました!","よっしゃー！");

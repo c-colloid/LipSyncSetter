@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 using UnityEditor.Animations;
 using UnityEditor.UIElements;
 using LipSyncSetter.Gatosyocora.VRCAvatars3Tools.Utilitys;
+using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace LipSyncSetter.Editor.Utilities
 {
@@ -147,6 +148,42 @@ namespace LipSyncSetter.Editor.Utilities
 					children[1].motion = constantClips[i.Item2];
 					blendTree.children = children;
 				});
+		}
+
+		public static void AddVoiceBoostToMenu(VRCExpressionsMenu targetMenu, VRCExpressionParameters parameters)
+		{
+			if (targetMenu == null || parameters == null) return;
+
+			// パラメータ追加 (重複チェック)
+			if (!parameters.parameters.Any(p => p.name == "VoiceBoost"))
+			{
+				var paramList = parameters.parameters.ToList();
+				paramList.Add(new VRCExpressionParameters.Parameter
+				{
+					name = "VoiceBoost",
+					valueType = VRCExpressionParameters.ValueType.Float,
+					defaultValue = 0f,
+					saved = true,
+					networkSynced = true
+				});
+				parameters.parameters = paramList.ToArray();
+				EditorUtility.SetDirty(parameters);
+			}
+
+			// メニュー追加 (重複チェック)
+			if (!targetMenu.controls.Any(c => c.name == "VoiceBoost"))
+			{
+				targetMenu.controls.Add(new VRCExpressionsMenu.Control
+				{
+					name = "VoiceBoost",
+					type = VRCExpressionsMenu.Control.ControlType.RadialPuppet,
+					subParameters = new[]
+					{
+						new VRCExpressionsMenu.Control.Parameter { name = "VoiceBoost" }
+					}
+				});
+				EditorUtility.SetDirty(targetMenu);
+			}
 		}
 	}
 }
