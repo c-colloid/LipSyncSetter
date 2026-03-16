@@ -212,7 +212,8 @@ public class LipSyncSetter : EditorWindow
 	    	var config = Editor.Utilities.LSSAnimationBuilder.BuildConfig(rootVisualElement);
 	    	var builder = new Editor.Utilities.LSSAnimationBuilder(config);
 	        var clips = CreateAnime(builder);
-	        var animator = builder.CreateAnimator(_lssAvatarData, clips, _newFXLayer);
+	        var constantClips = builder.CreateConstantAnime(_lssAvatarData);
+	        var animator = builder.CreateAnimator(_lssAvatarData, clips, constantClips, _newFXLayer);
 
 	        //AvatarDiscriptorに作成したAnimatorを割り当て
 	        if (_lssAvatarData.AvatarDescriptor){

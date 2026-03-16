@@ -39,6 +39,8 @@ namespace LipSyncSetter.NDMF
 			var clips = builder.CreateAnime(target.LSSAvatarData);
 			if (clips.Count == 0) return;
 
+			var constantClips = builder.CreateConstantAnime(target.LSSAvatarData);
+
 			var controllerCtx = ctx.Extension<VirtualControllerContext>();
 			var fxController = (VirtualAnimatorController)controllerCtx.Controllers[VRCAvatarDescriptor.AnimLayerType.FX];
 
@@ -56,8 +58,31 @@ namespace LipSyncSetter.NDMF
 				foreach (var state in layer.StateMachine.AllStates())
 				{
 					var labelIndex = labels.IndexOf(state.Name);
-					if (labelIndex >= 0)
+					if (labelIndex < 0) continue;
+
+					if (state.Motion is VirtualBlendTree blendTree && blendTree.Children.Count >= 2)
 					{
+						// BlendTree children にカーブアニメと固定100アニメを設定
+						var children = blendTree.Children;
+						children = children.SetItem(0, new VirtualChildMotion
+						{
+							Motion = controllerCtx.Clone(clips[labelIndex]),
+							Threshold = children[0].Threshold,
+							DirectBlendParameter = children[0].DirectBlendParameter,
+							TimeScale = children[0].TimeScale
+						});
+						children = children.SetItem(1, new VirtualChildMotion
+						{
+							Motion = controllerCtx.Clone(constantClips[labelIndex]),
+							Threshold = children[1].Threshold,
+							DirectBlendParameter = children[1].DirectBlendParameter,
+							TimeScale = children[1].TimeScale
+						});
+						blendTree.Children = children;
+					}
+					else
+					{
+						// フォールバック: BlendTreeでない場合は直接割り当て
 						state.Motion = controllerCtx.Clone(clips[labelIndex]);
 					}
 				}

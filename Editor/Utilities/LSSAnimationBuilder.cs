@@ -76,13 +76,19 @@ namespace LipSyncSetter.Editor.Utilities
 			return clips;
 		}
 
-		public AnimatorController CreateAnimator(LSSAvatarData lssAvatarData, List<AnimationClip> clips, bool isNewFXLayer = false)
+		public List<AnimationClip> CreateConstantAnime(LSSAvatarData lssAvatarData)
+		{
+			return CreateAnime(lssAvatarData, AnimationCurve.Constant(0, 1 / 60f, 100));
+		}
+
+		public AnimatorController CreateAnimator(LSSAvatarData lssAvatarData, List<AnimationClip> clips, List<AnimationClip> constantClips = null, bool isNewFXLayer = false)
 		{
 			if (clips.Count == 0) return null;
 			var sampleanimator = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GUIDToAssetPath(SampleAnimatorGUID));
 			var states = sampleanimator.layers[0].stateMachine.states.ToList();
 
 			AssignClipsToStates(states, clips);
+			if (constantClips != null) AssignClipsToBlendTree(states, clips, constantClips);
 
 			var animator = _config.DefaultAnimator;
 			var temp_animator = _config.NewAnimator;
@@ -101,6 +107,7 @@ namespace LipSyncSetter.Editor.Utilities
 				states = temp_animator.layers[0].stateMachine.states.ToList();
 
 				AssignClipsToStates(states, clips);
+				if (constantClips != null) AssignClipsToBlendTree(states, clips, constantClips);
 				if (!animator) return temp_animator;
 
 				animator.parameters.Where(p => !temp_animator.parameters.Contains(p))
@@ -122,8 +129,24 @@ namespace LipSyncSetter.Editor.Utilities
 		{
 			var labels = _config.LipSyncs.Select(p => p.label).ToList();
 			states.Select(state => (state, labels.IndexOf(state.state.name)))
-				.Where(i => i.Item2 >= 0)
+				.Where(i => i.Item2 >= 0 && !(i.state.state.motion is BlendTree))
 				.ToList().ForEach(i => i.state.state.motion = clips[i.Item2]);
+		}
+
+		private void AssignClipsToBlendTree(List<ChildAnimatorState> states, List<AnimationClip> clips, List<AnimationClip> constantClips)
+		{
+			var labels = _config.LipSyncs.Select(p => p.label).ToList();
+			states.Select(state => (state, labels.IndexOf(state.state.name)))
+				.Where(i => i.Item2 >= 0 && i.state.state.motion is BlendTree)
+				.ToList().ForEach(i =>
+				{
+					var blendTree = (BlendTree)i.state.state.motion;
+					if (blendTree.children.Length < 2) return;
+					var children = blendTree.children;
+					children[0].motion = clips[i.Item2];
+					children[1].motion = constantClips[i.Item2];
+					blendTree.children = children;
+				});
 		}
 	}
 }
