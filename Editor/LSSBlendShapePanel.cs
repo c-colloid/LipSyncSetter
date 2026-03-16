@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -11,21 +9,21 @@ using VRC.SDK3.Avatars.Components;
 namespace LipSyncSetter
 {
 	public class LSSBlendShapePanel
-	{	
+	{
 		LSSAvatarData _lssAvatarData;
-		
+
 		public VRCAvatarDescriptor AvatarDescriptor{get => _lssAvatarData.AvatarDescriptor;}
 		public List<string> LipSyncBlendShape{get => _lssAvatarData.LipSyncBlendShape;set => _lssAvatarData.LipSyncBlendShape = value;}
-		
+
 		public LSSBlendShapePanel(LSSAvatarData lssAvatarData)
 		{
 			_lssAvatarData = lssAvatarData;
 		}
-		
+
 		public void SetLSSBlendShapePanel(VisualElement root)
 		{
 			root.Q<ObjectField>("FaceMesh").objectType = typeof(SkinnedMeshRenderer);
-        
+
 			//LipSyncのリストを作成
 			var visemeList = root.Q<ListView>("LipSyncList");
 			visemeList.itemsSource = Editor.VisemeNameList.Visemes;
@@ -48,11 +46,11 @@ namespace LipSyncSetter
 				targetfield.index = blendshapeindex != -1 ? blendshapeindex : 0;
 				var warningcolor = Color.yellow * (EditorGUIUtility.isProSkin ? Color.gray : Color.white);
 				targetfield.style.backgroundColor = blendshapeindex > 0 ? default : warningcolor;
-				targetfield.RegisterValueChangedCallback(evt => 
+				targetfield.RegisterValueChangedCallback(evt =>
 					targetfield.style.backgroundColor = targetfield.index > 0 ? default : warningcolor);
 				ve.Q<PopupField<string>>().Q<VisualElement>(null,"unity-base-popup-field__input").pickingMode = PickingMode.Position;
 			};
-			
+
 			//FaceMeshオブジェクトフィールドを変更した時
 			root.Q<ObjectField>("FaceMesh").RegisterValueChangedCallback(evt =>
 			{
@@ -62,12 +60,12 @@ namespace LipSyncSetter
 				LipSyncBlendShape.Add("-none-");
 				LipSyncBlendShape.Add("disable");
 				if (!mesh) {
-					root.Q<ListView>("LipSyncList").Rebuild(); 
+					root.Q<ListView>("LipSyncList").Rebuild();
 					return;}
 				int i = 0;
-			
+
 				var target = mesh.sharedMesh;
-				
+
 				for (int j = 0; j < target.blendShapeCount ; j++) {
 					LipSyncBlendShape.Add(target.GetBlendShapeName(j));
 				}

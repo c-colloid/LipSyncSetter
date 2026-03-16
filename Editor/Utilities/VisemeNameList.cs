@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 namespace LipSyncSetter.Editor
 {
@@ -27,7 +23,7 @@ namespace LipSyncSetter.Editor
 			"ou",
 			"Disable"
 			};
-			
+
 		public static List<string> Visemes => _visemes;
 	}
 }
