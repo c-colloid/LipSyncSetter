@@ -39,7 +39,7 @@ namespace LipSyncSetter.NDMF
 			target.LSSAvatarData.AvatarDescriptor = ctx.AvatarDescriptor;
 			var config = LSSAnimationBuilder.BuildConfig(target);
 			var builder = new LSSAnimationBuilder(config);
-			var clips = builder.CreateAnime(target.LSSAvatarData);
+			var clips = builder.CreateAnime(target.LSSAvatarData, target.Curve);
 			if (clips.Count == 0) return;
 
 			var constantClips = builder.CreateConstantAnime(target.LSSAvatarData);
