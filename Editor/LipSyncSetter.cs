@@ -1,8 +1,9 @@
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.UIElements;
 using VRC.SDK3.Avatars.Components;
+using VRC.SDK3.Avatars.ScriptableObjects;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Animations;
@@ -140,7 +141,9 @@ public class LipSyncSetter : EditorWindow
 	    	_savefolder = savefolder;
 
 	    	//新アニメーター作成
-			_animator = _animator ?? AssetDatabase.LoadAssetAtPath<AnimatorController>(folderpath + "/Resource/SmartLipSync.controller");
+			_animator = _animator ?? AssetDatabase.LoadAssetAtPath<AnimatorController>(
+				AssetDatabase.GUIDToAssetPath(Editor.Utilities.LSSAnimationBuilder.SampleAnimatorGUID)
+			);
 	    	AssetDatabase.CopyAsset(AssetDatabase.GetAssetPath(_animator),_savefolder + "/LipSyncFXLayer.controller");
 
 			ObjectField newfxlayer = root.Q<ObjectField>("NewFXLayer");
@@ -211,8 +214,9 @@ public class LipSyncSetter : EditorWindow
 	    	//アニメーション・アニメーター作成
 	    	var config = Editor.Utilities.LSSAnimationBuilder.BuildConfig(rootVisualElement);
 	    	var builder = new Editor.Utilities.LSSAnimationBuilder(config);
-	        CreateAnime(builder);
-	        var animator = builder.CreateAnimator(_lssAvatarData,_newFXLayer);
+	        var clips = CreateAnime(builder);
+	        var constantClips = builder.CreateConstantAnime(_lssAvatarData);
+	        var animator = builder.CreateAnimator(_lssAvatarData, clips, constantClips, _newFXLayer);
 
 	        //AvatarDiscriptorに作成したAnimatorを割り当て
 	        if (_lssAvatarData.AvatarDescriptor){
@@ -220,19 +224,29 @@ public class LipSyncSetter : EditorWindow
 		        Editor.Utilities.SetPlayableLayers.SetFXToCustom(_lssAvatarData.AvatarDescriptor, animator);
 	        }
 
+	        // VoiceBoost メニュー追加
+	        var voiceBoostMenu = root.Q<ObjectField>("VoiceBoostMenu").value as VRCExpressionsMenu;
+	        if (voiceBoostMenu != null && _lssAvatarData.AvatarDescriptor?.expressionParameters != null)
+	        {
+	        	Editor.Utilities.LSSAnimationBuilder.AddVoiceBoostToMenu(
+	        		voiceBoostMenu, _lssAvatarData.AvatarDescriptor.expressionParameters);
+	        }
+
 	        EditorUtility.DisplayDialog("LipSyncSetter","リップシンクの作成が終了しました!","よっしゃー！");
         };
 
     }
 
-    public void CreateAnime(Editor.Utilities.LSSAnimationBuilder builder)
+    public List<AnimationClip> CreateAnime(Editor.Utilities.LSSAnimationBuilder builder)
     {
-	    builder.CreateAnime(_lssAvatarData).Select((clip,index) => (clip,index))
+	    var clips = builder.CreateAnime(_lssAvatarData);
+	    clips.Select((clip,index) => (clip,index))
 		    .ToList().ForEach(c => {
 			    EditorUtility.DisplayCancelableProgressBar("Create AnimetionClips",$"Create {c.clip.name}.anim",c.index/15);
 			    AssetDatabase.CreateAsset(c.clip,_savefolder + "/v." + c.clip.name + ".anim");
 		    });
 	    EditorUtility.ClearProgressBar();
+	    return clips;
     }
 }
 }

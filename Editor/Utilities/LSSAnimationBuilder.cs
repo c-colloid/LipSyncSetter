@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -7,15 +7,15 @@ using UnityEngine.UIElements;
 using UnityEditor.Animations;
 using UnityEditor.UIElements;
 using LipSyncSetter.Gatosyocora.VRCAvatars3Tools.Utilitys;
+using VRC.SDK3.Avatars.ScriptableObjects;
 
 namespace LipSyncSetter.Editor.Utilities
 {
 	using VRC.SDK3.Avatars.Components;
 	public class LSSAnimationBuilder
 	{
-		private List<AnimationClip> _clips = new List<AnimationClip>();
 		private readonly LSSConfig _config;
-		public const string SampleAnimatorGUID = "eb94aa29cfbdc604ab12619f5775adff";
+		public const string SampleAnimatorGUID = "d957552f3f56f1a41b975c602ffc6e6d";
 
 		public LSSAnimationBuilder(LSSConfig config)
 		{
@@ -45,11 +45,12 @@ namespace LipSyncSetter.Editor.Utilities
 			return config;
 		}
 
-		public List<AnimationClip> CreateAnime(LSSAvatarData lssAvatarData)
+		public List<AnimationClip> CreateAnime(LSSAvatarData lssAvatarData, AnimationCurve curve = null)
 		{
+			curve ??= AnimationCurve.Linear(0, 0, 1 / 60f, 100);
 			var popups = _config.LipSyncs;
 
-			_clips = popups.Select(p => (new AnimationClip(){name = p.label}
+			var clips = popups.Select(p => (new AnimationClip(){name = p.label}
 				,p.value
 				))
 				.Select(c =>
@@ -64,7 +65,7 @@ namespace LipSyncSetter.Editor.Utilities
 							lssAvatarData.AvatarDescriptor.transform),
 						typeof(SkinnedMeshRenderer),
 						"blendShape."+ p.value,
-						AnimationCurve.Linear(0,0,1/60.0f,System.Convert.ToInt32(p.value == c.value) * 100)
+							p.value == c.value ? curve : AnimationCurve.Constant(0,1/60f,0)
 						);
 					}
 					);
@@ -73,16 +74,22 @@ namespace LipSyncSetter.Editor.Utilities
 				)
 				.ToList();
 
-			return _clips;
+			return clips;
 		}
 
-		public AnimatorController CreateAnimator(LSSAvatarData lssAvatarData, bool isNewFXLayer = false)
+		public List<AnimationClip> CreateConstantAnime(LSSAvatarData lssAvatarData)
 		{
-			if (_clips.Count == 0) return null;
+			return CreateAnime(lssAvatarData, AnimationCurve.Constant(0, 1 / 60f, 100));
+		}
+
+		public AnimatorController CreateAnimator(LSSAvatarData lssAvatarData, List<AnimationClip> clips, List<AnimationClip> constantClips = null, bool isNewFXLayer = false)
+		{
+			if (clips.Count == 0) return null;
 			var sampleanimator = AssetDatabase.LoadAssetAtPath<AnimatorController>(AssetDatabase.GUIDToAssetPath(SampleAnimatorGUID));
 			var states = sampleanimator.layers[0].stateMachine.states.ToList();
 
-			AssignClipsToStates(states);
+			AssignClipsToStates(states, clips);
+			if (constantClips != null) AssignClipsToBlendTree(states, clips, constantClips);
 
 			var animator = _config.DefaultAnimator;
 			var temp_animator = _config.NewAnimator;
@@ -100,7 +107,8 @@ namespace LipSyncSetter.Editor.Utilities
 			{
 				states = temp_animator.layers[0].stateMachine.states.ToList();
 
-				AssignClipsToStates(states);
+				AssignClipsToStates(states, clips);
+				if (constantClips != null) AssignClipsToBlendTree(states, clips, constantClips);
 				if (!animator) return temp_animator;
 
 				animator.parameters.Where(p => !temp_animator.parameters.Contains(p))
@@ -118,12 +126,64 @@ namespace LipSyncSetter.Editor.Utilities
 			return result_animator;
 		}
 
-		private void AssignClipsToStates(List<ChildAnimatorState> states)
+		private void AssignClipsToStates(List<ChildAnimatorState> states, List<AnimationClip> clips)
 		{
 			var labels = _config.LipSyncs.Select(p => p.label).ToList();
 			states.Select(state => (state, labels.IndexOf(state.state.name)))
-				.Where(i => i.Item2 >= 0)
-				.ToList().ForEach(i => i.state.state.motion = _clips[i.Item2]);
+				.Where(i => i.Item2 >= 0 && !(i.state.state.motion is BlendTree))
+				.ToList().ForEach(i => i.state.state.motion = clips[i.Item2]);
+		}
+
+		private void AssignClipsToBlendTree(List<ChildAnimatorState> states, List<AnimationClip> clips, List<AnimationClip> constantClips)
+		{
+			var labels = _config.LipSyncs.Select(p => p.label).ToList();
+			states.Select(state => (state, labels.IndexOf(state.state.name)))
+				.Where(i => i.Item2 >= 0 && i.state.state.motion is BlendTree)
+				.ToList().ForEach(i =>
+				{
+					var blendTree = (BlendTree)i.state.state.motion;
+					if (blendTree.children.Length < 2) return;
+					var children = blendTree.children;
+					children[0].motion = clips[i.Item2];
+					children[1].motion = constantClips[i.Item2];
+					blendTree.children = children;
+				});
+		}
+
+		public static void AddVoiceBoostToMenu(VRCExpressionsMenu targetMenu, VRCExpressionParameters parameters)
+		{
+			if (targetMenu == null || parameters == null) return;
+
+			// パラメータ追加 (重複チェック)
+			if (!parameters.parameters.Any(p => p.name == "VoiceBoost"))
+			{
+				var paramList = parameters.parameters.ToList();
+				paramList.Add(new VRCExpressionParameters.Parameter
+				{
+					name = "VoiceBoost",
+					valueType = VRCExpressionParameters.ValueType.Float,
+					defaultValue = 0f,
+					saved = true,
+					networkSynced = true
+				});
+				parameters.parameters = paramList.ToArray();
+				EditorUtility.SetDirty(parameters);
+			}
+
+			// メニュー追加 (重複チェック)
+			if (!targetMenu.controls.Any(c => c.name == "VoiceBoost"))
+			{
+				targetMenu.controls.Add(new VRCExpressionsMenu.Control
+				{
+					name = "VoiceBoost",
+					type = VRCExpressionsMenu.Control.ControlType.RadialPuppet,
+					subParameters = new[]
+					{
+						new VRCExpressionsMenu.Control.Parameter { name = "VoiceBoost" }
+					}
+				});
+				EditorUtility.SetDirty(targetMenu);
+			}
 		}
 	}
 }

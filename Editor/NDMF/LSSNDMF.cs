@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
@@ -19,11 +19,14 @@ namespace LipSyncSetter.NDMF
 				.WithRequiredExtension(typeof(VirtualControllerContext), seq =>
 				{
 					seq.Run("Generate LipSync", GenerateLipSync);
+					seq.Run("Setup VoiceBoost Menu", SetupVoiceBoostMenu);
 					seq.Run("Remove Component", ctx =>
 					{
-						Object.DestroyImmediate(
-							ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject
-						);
+						var lssObj = ctx.AvatarRootTransform.GetComponentInChildren<LipSyncSetterMonoBehavior>()?.gameObject;
+						if (lssObj != null) Object.DestroyImmediate(lssObj);
+
+						var voiceBoostObj = ctx.AvatarRootTransform.GetComponentInChildren<LSSVoiceBoost>()?.gameObject;
+						if (voiceBoostObj != null) Object.DestroyImmediate(voiceBoostObj);
 					});
 				});
 		}
@@ -38,6 +41,8 @@ namespace LipSyncSetter.NDMF
 			var builder = new LSSAnimationBuilder(config);
 			var clips = builder.CreateAnime(target.LSSAvatarData);
 			if (clips.Count == 0) return;
+
+			var constantClips = builder.CreateConstantAnime(target.LSSAvatarData);
 
 			var controllerCtx = ctx.Extension<VirtualControllerContext>();
 			var fxController = (VirtualAnimatorController)controllerCtx.Controllers[VRCAvatarDescriptor.AnimLayerType.FX];
@@ -56,8 +61,17 @@ namespace LipSyncSetter.NDMF
 				foreach (var state in layer.StateMachine.AllStates())
 				{
 					var labelIndex = labels.IndexOf(state.Name);
-					if (labelIndex >= 0)
+					if (labelIndex < 0) continue;
+
+					if (state.Motion is VirtualBlendTree blendTree && blendTree.Children.Count >= 2)
 					{
+						// BlendTree children にカーブアニメと固定100アニメを設定
+						blendTree.Children[0].Motion = controllerCtx.Clone(clips[labelIndex]);
+						blendTree.Children[1].Motion = controllerCtx.Clone(constantClips[labelIndex]);
+					}
+					else
+					{
+						// フォールバック: BlendTreeでない場合は直接割り当て
 						state.Motion = controllerCtx.Clone(clips[labelIndex]);
 					}
 				}
@@ -78,6 +92,17 @@ namespace LipSyncSetter.NDMF
 					parameters = parameters.Add(p.Key, p.Value);
 			}
 			fxController.Parameters = parameters;
+		}
+
+		private static void SetupVoiceBoostMenu(BuildContext ctx)
+		{
+			var voiceBoost = ctx.AvatarRootObject?.GetComponentInChildren<LSSVoiceBoost>();
+			if (voiceBoost == null) return;
+
+			var targetMenu = voiceBoost.InstallTargetMenu;
+			var expressionParameters = ctx.AvatarDescriptor.expressionParameters;
+
+			LSSAnimationBuilder.AddVoiceBoostToMenu(targetMenu, expressionParameters);
 		}
 	}
 }
