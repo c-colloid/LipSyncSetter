@@ -14,6 +14,7 @@
         <ui:Button name="FXLayerSetting" binding-path="m_fxlayersetting" tooltip="新規アニメーターの作成" class="FXLayerSetting" style="background-image: url(&quot;project://database/Assets/LipSyncSetter/Resource/Folder_DarkGrey(Unity).png?fileID=2800000&amp;guid=34dc5b66b260e9448922ff542fc006bd&amp;type=3#Folder_DarkGrey(Unity)&quot;); -unity-background-scale-mode: scale-to-fit; width: 20%; max-width: 40px; max-height: 20px;" />
         <uie:ObjectField label="New FX Layer" name="NewFXLayer" type="UnityEditor.Animations.AnimatorController, UnityEditor.CoreModule" allow-scene-objects="false" tooltip="新アニメーターコントローラー" class="NewFXLayer" style="display: flex;" />
     </ui:VisualElement>
+    <uie:CurveField label="Animation Curve" name="AnimationCurve" />
     <uie:ObjectField label="VoiceBoost Menu" name="VoiceBoostMenu" type="VRC.SDK3.Avatars.ScriptableObjects.VRCExpressionsMenu, VRCSDK3A" tooltip="VoiceBoostを追加するExpressionMenu" />
     <ui:VisualElement style="flex-shrink: 0; flex-direction: row; height: 30px;">
         <ui:Button name="Reload" tooltip="リセット" style="background-image: url(&quot;project://database/Assets/LipSyncSetter/Resource/Reload%20Icon.png?fileID=2800000&amp;guid=2d942cfbc4e19f248b77e80abe557f8b&amp;type=3#Reload Icon&quot;); position: absolute; left: 1px; top: 1px; bottom: 1px; right: 100px; width: 25px; -unity-background-scale-mode: scale-to-fit;" />

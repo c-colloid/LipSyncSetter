@@ -71,6 +71,9 @@ public class LipSyncSetter : EditorWindow
 
 		root.Q<ObjectField>("NewFXLayer").style.display = DisplayStyle.None;
 
+		var curveField = root.Q<CurveField>("AnimationCurve");
+		curveField.value = AnimationCurve.Linear(0, 0, 1f/60f, 100);
+
 		LSSBlendShapePanel blendshapepanel = new LSSBlendShapePanel(_lssAvatarData);
 		blendshapepanel.SetLSSBlendShapePanel(root);
 
@@ -214,7 +217,8 @@ public class LipSyncSetter : EditorWindow
 	    	//アニメーション・アニメーター作成
 	    	var config = Editor.Utilities.LSSAnimationBuilder.BuildConfig(rootVisualElement);
 	    	var builder = new Editor.Utilities.LSSAnimationBuilder(config);
-	        var clips = CreateAnime(builder);
+	    	var curve = root.Q<CurveField>("AnimationCurve").value;
+	        var clips = CreateAnime(builder, curve);
 	        var constantClips = builder.CreateConstantAnime(_lssAvatarData);
 	        var animator = builder.CreateAnimator(_lssAvatarData, clips, constantClips, _newFXLayer);
 
@@ -237,9 +241,9 @@ public class LipSyncSetter : EditorWindow
 
     }
 
-    public List<AnimationClip> CreateAnime(Editor.Utilities.LSSAnimationBuilder builder)
+    public List<AnimationClip> CreateAnime(Editor.Utilities.LSSAnimationBuilder builder, AnimationCurve curve)
     {
-	    var clips = builder.CreateAnime(_lssAvatarData);
+	    var clips = builder.CreateAnime(_lssAvatarData, curve);
 	    clips.Select((clip,index) => (clip,index))
 		    .ToList().ForEach(c => {
 			    EditorUtility.DisplayCancelableProgressBar("Create AnimetionClips",$"Create {c.clip.name}.anim",c.index/15);
