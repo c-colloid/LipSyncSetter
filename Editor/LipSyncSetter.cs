@@ -246,7 +246,7 @@ public class LipSyncSetter : EditorWindow
 	    var clips = builder.CreateAnime(_lssAvatarData, curve);
 	    clips.Select((clip,index) => (clip,index))
 		    .ToList().ForEach(c => {
-			    EditorUtility.DisplayCancelableProgressBar("Create AnimetionClips",$"Create {c.clip.name}.anim",c.index/15);
+			    EditorUtility.DisplayCancelableProgressBar("Create AnimationClips",$"Create {c.clip.name}.anim",c.index/15);
 			    AssetDatabase.CreateAsset(c.clip,_savefolder + "/v." + c.clip.name + ".anim");
 		    });
 	    EditorUtility.ClearProgressBar();

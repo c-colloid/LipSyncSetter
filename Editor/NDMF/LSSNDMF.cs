@@ -100,7 +100,13 @@ namespace LipSyncSetter.NDMF
 			if (voiceBoost == null) return;
 
 			var targetMenu = voiceBoost.InstallTargetMenu;
-			var expressionParameters = ctx.AvatarDescriptor.expressionParameters;
+			var expressionParameters = ctx.AvatarDescriptor?.expressionParameters;
+
+			if (targetMenu == null || expressionParameters == null)
+			{
+				Debug.LogWarning("[LipSyncSetter] VoiceBoost: InstallTargetMenu or ExpressionParameters is not set. Skipping menu setup.");
+				return;
+			}
 
 			LSSAnimationBuilder.AddVoiceBoostToMenu(targetMenu, expressionParameters);
 		}

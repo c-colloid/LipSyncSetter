@@ -154,10 +154,11 @@ namespace LipSyncSetter.Editor.Utilities
 		{
 			if (targetMenu == null || parameters == null) return;
 
-			// パラメータ追加 (重複チェック)
-			if (!parameters.parameters.Any(p => p.name == "VoiceBoost"))
+			// パラメータ追加 (重複チェック + null安全)
+			var paramArray = parameters.parameters ?? System.Array.Empty<VRCExpressionParameters.Parameter>();
+			if (!paramArray.Any(p => p.name == "VoiceBoost"))
 			{
-				var paramList = parameters.parameters.ToList();
+				var paramList = paramArray.ToList();
 				paramList.Add(new VRCExpressionParameters.Parameter
 				{
 					name = "VoiceBoost",
@@ -170,9 +171,16 @@ namespace LipSyncSetter.Editor.Utilities
 				EditorUtility.SetDirty(parameters);
 			}
 
-			// メニュー追加 (重複チェック)
-			if (!targetMenu.controls.Any(c => c.name == "VoiceBoost"))
+			// メニュー追加 (重複チェック + 上限チェック)
+			var controls = targetMenu.controls ?? new List<VRCExpressionsMenu.Control>();
+			targetMenu.controls = controls;
+			if (!controls.Any(c => c.name == "VoiceBoost"))
 			{
+				if (controls.Count >= 8)
+				{
+					Debug.LogWarning("[LipSyncSetter] VoiceBoost: Target menu already has 8 controls (VRC limit). Cannot add VoiceBoost control.");
+					return;
+				}
 				targetMenu.controls.Add(new VRCExpressionsMenu.Control
 				{
 					name = "VoiceBoost",

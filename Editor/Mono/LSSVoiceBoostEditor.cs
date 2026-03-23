@@ -14,6 +14,12 @@ namespace LipSyncSetter.Editor
 
 		public override VisualElement CreateInspectorGUI()
 		{
+			if (UXML == null)
+			{
+				var fallback = new VisualElement();
+				fallback.Add(new Label("UXML asset is missing. Please reassign the editor script."));
+				return fallback;
+			}
 			var root = UXML.CloneTree();
 			root.Bind(serializedObject);
 			return root;
